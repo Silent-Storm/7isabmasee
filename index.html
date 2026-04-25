@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
@@ -11,7 +10,7 @@
     <link rel="apple-touch-icon" href="https://img.icons8.com/ios-filled/180/e11d48/diamond--v1.png">
     <link rel="icon" type="image/png" href="https://img.icons8.com/ios-filled/180/e11d48/diamond--v1.png">
 
-    <title>Soha Finance Ultimate - الحساب الماسي</title>
+    <title>Soha Finance Royal - الحساب الماسي</title>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
@@ -26,6 +25,7 @@
             --obsidian: #0f0f11; --text-dark: #1f2937;
             --glass-bg: rgba(255, 255, 255, 0.75); --glass-border: rgba(255, 255, 255, 0.95);
             --safe-area-top: env(safe-area-inset-top, 40px);
+            --safe-area-bottom: env(safe-area-inset-bottom, 20px);
         }
 
         * {
@@ -40,23 +40,10 @@
             background-color: var(--pink-50);
             color: var(--text-dark);
             overflow-x: hidden;
-            display: flex; justify-content: center; align-items: center;
+            display: flex; flex-direction: column;
         }
 
-        /* --- Splash Screen --- */
-        #splashScreen {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background: rgba(255,255,255,0.98); backdrop-filter: blur(20px);
-            z-index: 9999; display: flex; flex-direction: column;
-            justify-content: center; align-items: center;
-            transition: opacity 0.6s ease, visibility 0.6s;
-        }
-        .biometric-icon { font-size: 80px; color: var(--pink-600); margin-bottom: 20px; animation: pulseScan 1.5s infinite alternate; }
-        .splash-text { font-size: 20px; font-weight: 800; color: var(--pink-900); }
-        .splash-sub { font-size: 14px; color: var(--gold); margin-top: 8px; font-weight: 700; }
-        @keyframes pulseScan { 0% { transform: scale(0.95); filter: drop-shadow(0 0 10px rgba(225,29,72,0.2)); } 100% { transform: scale(1.05); filter: drop-shadow(0 0 25px rgba(225,29,72,0.8)); } }
-
-        /* Animated Background */
+        /* --- Animated Background --- */
         .aurora-bg {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -2;
             background: linear-gradient(45deg, #ffe4e6, #fce7f3, #fdf2f8, #fefce8);
@@ -65,262 +52,187 @@
         #particles-canvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; pointer-events: none; }
         @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
 
-        .app-container {
-            width: 100%; max-width: 430px;
-            padding: calc(var(--safe-area-top) + 10px) 24px 40px;
+        /* --- Header --- */
+        .app-header {
+            padding: calc(var(--safe-area-top) + 15px) 20px 15px;
+            background: rgba(255,255,255,0.85);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(225,29,72,0.1);
+            position: sticky; top: 0; z-index: 100;
+            display: flex; justify-content: space-between; align-items: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+        }
+        .header-title { font-size: 20px; font-weight: 900; color: var(--pink-900); display: flex; align-items: center; gap: 8px; }
+        .header-date { font-size: 12px; font-weight: 700; color: var(--gold); background: var(--pink-50); padding: 6px 12px; border-radius: 20px;}
+
+        /* --- Main Content --- */
+        .app-content {
+            flex: 1;
+            padding: 20px 20px calc(var(--safe-area-bottom) + 80px);
+            max-width: 450px; margin: 0 auto; width: 100%;
             display: flex; flex-direction: column; gap: 20px;
-            position: relative; z-index: 1; opacity: 0; transform: translateY(20px);
-            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         /* --- Live Countdown Banner --- */
         .live-countdown-wrapper {
-            background: rgba(255, 255, 255, 0.9);
-            border-radius: 24px;
-            padding: 15px;
-            text-align: center;
-            box-shadow: 0 10px 20px rgba(225, 29, 72, 0.05), inset 0 0 0 1px rgba(225, 29, 72, 0.1);
-            position: relative;
-            overflow: hidden;
+            background: rgba(255, 255, 255, 0.9); border-radius: 24px; padding: 15px;
+            text-align: center; box-shadow: 0 10px 20px rgba(225, 29, 72, 0.05), inset 0 0 0 1px rgba(225, 29, 72, 0.1);
+            position: relative; overflow: hidden;
         }
-        .live-countdown-wrapper::before {
-            content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: var(--pink-600);
-        }
-        .countdown-title {
-            font-size: 13px; font-weight: 800; color: var(--pink-900); margin-bottom: 10px;
-            display: flex; align-items: center; justify-content: center; gap: 6px;
-        }
-        .live-dot {
-            width: 8px; height: 8px; background-color: #ef4444; border-radius: 50%;
-            animation: blink 1s infinite; box-shadow: 0 0 5px #ef4444;
-        }
+        .live-countdown-wrapper::before { content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: var(--pink-600); }
+        .countdown-title { font-size: 13px; font-weight: 800; color: var(--pink-900); margin-bottom: 10px; display: flex; align-items: center; justify-content: center; gap: 6px; }
+        .live-dot { width: 8px; height: 8px; background-color: #ef4444; border-radius: 50%; animation: blink 1s infinite; box-shadow: 0 0 5px #ef4444; }
         @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
-
-        .time-blocks {
-            display: flex; justify-content: center; gap: 10px; direction: ltr;
-        }
-        .time-block {
-            background: var(--pink-50); border: 1px solid var(--pink-100);
-            border-radius: 12px; padding: 8px; min-width: 60px;
-            box-shadow: inset 2px 2px 5px rgba(0,0,0,0.02), inset -2px -2px 5px rgba(255,255,255,0.8);
-        }
+        .time-blocks { display: flex; justify-content: center; gap: 10px; direction: ltr; }
+        .time-block { background: var(--pink-50); border: 1px solid var(--pink-100); border-radius: 12px; padding: 8px; min-width: 60px; box-shadow: inset 2px 2px 5px rgba(0,0,0,0.02), inset -2px -2px 5px rgba(255,255,255,0.8); }
         .time-val { font-size: 20px; font-weight: 900; color: var(--pink-600); font-family: system-ui, -apple-system; }
         .time-lbl { font-size: 10px; font-weight: 700; color: var(--gold); text-transform: uppercase; margin-top: 2px;}
         .seconds-val { color: var(--pink-900); }
-
-        /* Smart Saturday Note */
+        
         .saturday-note {
-            background: rgba(212, 175, 55, 0.1);
-            border: 1px solid rgba(212, 175, 55, 0.3);
-            color: #b48608;
-            padding: 8px 12px;
-            border-radius: 12px;
-            font-size: 12px;
-            font-weight: 800;
-            margin-top: 15px;
-            display: none;
-            animation: pulseFade 2s infinite;
+            background: rgba(212, 175, 55, 0.1); border: 1px solid rgba(212, 175, 55, 0.3); color: #b48608;
+            padding: 8px 12px; border-radius: 12px; font-size: 12px; font-weight: 800; margin-top: 15px; display: none; animation: pulseFade 2s infinite;
         }
         @keyframes pulseFade { 0% { opacity: 0.7; } 50% { opacity: 1; text-shadow: 0 0 10px rgba(212,175,55,0.2); } 100% { opacity: 0.7; } }
 
-        /* Glass Card Base */
+        /* --- Glass Card Base --- */
         .glass-card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+            background: var(--glass-bg); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
             border: 1px solid var(--glass-border); border-radius: 32px;
-            box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.05), -10px -10px 20px rgba(255, 255, 255, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.9);
             padding: 25px; transition: transform 0.3s ease;
         }
 
-        header { text-align: center; margin-bottom: 5px; }
-        .welcome-badge {
-            display: inline-flex; align-items: center; gap: 8px;
-            background: white; padding: 8px 20px; border-radius: 100px;
-            font-size: 14px; font-weight: 700; color: var(--pink-600);
-            box-shadow: 0 4px 15px rgba(225, 29, 72, 0.1); margin-bottom: 12px;
-        }
-        h1 { margin: 0; font-size: 28px; font-weight: 900; color: var(--pink-900); }
-        .subtitle { font-size: 14px; color: var(--gold); font-weight: 700; margin-top: 4px; }
-
-        /* Input Section */
+        /* --- Input Section --- */
         .input-wrapper { position: relative; text-align: center; padding: 10px 0 0; }
         .input-label { font-size: 16px; font-weight: 800; color: var(--pink-900); margin-bottom: 10px; display: block; }
         .currency-symbol { position: absolute; left: 15px; top: 45px; font-size: 24px; color: var(--pink-500); font-weight: 800; opacity: 0.5; }
-        
         input {
-            width: 100%; background: transparent; border: none;
-            font-size: 56px; font-weight: 900; color: var(--pink-600);
-            text-align: center; outline: none; padding: 0; letter-spacing: -1px;
-            transition: all 0.3s ease;
+            width: 100%; background: transparent; border: none; font-size: 56px; font-weight: 900; color: var(--pink-600);
+            text-align: center; outline: none; padding: 0; letter-spacing: -1px; transition: all 0.3s ease;
         }
         input:focus { transform: scale(1.05); }
         input::placeholder { color: rgba(225, 29, 72, 0.2); font-size: 40px; }
-        input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
-
-        /* Quick Actions */
-        .quick-actions { display: flex; justify-content: center; gap: 8px; margin-top: 15px; margin-bottom: 20px; }
+        
+        .quick-actions { display: flex; justify-content: center; gap: 8px; margin-top: 15px; margin-bottom: 10px; }
         .quick-btn {
-            background: rgba(255,255,255,0.9); border: 1px solid rgba(225,29,72,0.05);
-            color: var(--pink-900); font-weight: 800; font-size: 14px;
-            padding: 10px 14px; border-radius: 16px; cursor: pointer;
+            background: rgba(255,255,255,0.9); border: 1px solid rgba(225,29,72,0.05); color: var(--pink-900);
+            font-weight: 800; font-size: 14px; padding: 10px 14px; border-radius: 16px; cursor: pointer;
             transition: 0.2s; box-shadow: 4px 4px 10px rgba(0,0,0,0.03), -4px -4px 10px rgba(255,255,255,0.8); flex: 1;
         }
-        .quick-btn:active { transform: scale(0.92); box-shadow: inset 4px 4px 10px rgba(0,0,0,0.03), inset -4px -4px 10px rgba(255,255,255,0.8); }
+        .quick-btn:active { transform: scale(0.92); box-shadow: inset 4px 4px 10px rgba(0,0,0,0.03); }
 
-        .btn-primary {
-            background: linear-gradient(135deg, var(--pink-600), var(--pink-500));
-            color: white; width: 100%; padding: 20px; border-radius: 24px;
-            border: none; font-size: 18px; font-weight: 800; cursor: pointer;
-            box-shadow: 0 12px 24px rgba(225, 29, 72, 0.25);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            display: flex; justify-content: center; align-items: center; gap: 10px;
-            position: relative; overflow: hidden;
-        }
-        .btn-primary:active { transform: scale(0.95); box-shadow: 0 6px 12px rgba(225, 29, 72, 0.2); }
-
-        /* Dashboard Results */
-        #dashboard { display: none; animation: slideUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
-
-        /* The VIP Card */
+        /* --- Dashboard Results --- */
+        #dashboard { display: none; animation: slideUpFade 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        
+        /* --- The VIP Card --- */
         .vip-card-wrapper {
             position: relative; border-radius: 24px; padding: 2px;
             background: linear-gradient(135deg, var(--gold), #fff, var(--gold));
             margin-bottom: 24px; box-shadow: 0 30px 60px rgba(212, 175, 55, 0.3);
             transform-style: preserve-3d; perspective: 1000px;
         }
-        
         .vip-card {
             background: linear-gradient(135deg, var(--obsidian) 0%, #27272a 100%);
             border-radius: 22px; padding: 30px; color: white;
             position: relative; overflow: hidden; transform: translateZ(20px);
         }
-
         .vip-card::before {
             content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23d4af37' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
             z-index: 1; pointer-events: none;
         }
-
         .hologram-overlay {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.15) 0%, transparent 60%);
             mix-blend-mode: overlay; pointer-events: none; z-index: 5; transition: background 0.1s;
         }
-
         .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; position: relative; z-index: 2; }
-        .card-chip {
-            width: 44px; height: 34px; background: linear-gradient(135deg, #ffd700, #b8860b, #ffd700);
-            border-radius: 8px; box-shadow: inset 0 0 5px rgba(0,0,0,0.4); position: relative;
-        }
+        .card-chip { width: 44px; height: 34px; background: linear-gradient(135deg, #ffd700, #b8860b, #ffd700); border-radius: 8px; box-shadow: inset 0 0 5px rgba(0,0,0,0.4); position: relative; }
         .card-chip::after { content: ''; position: absolute; top: 12px; left: 0; width: 100%; height: 1px; background: rgba(0,0,0,0.3); }
         .card-logo { font-size: 19px; font-weight: 900; letter-spacing: 3px; color: var(--gold); }
-
         .card-body { text-align: right; direction: rtl; position: relative; z-index: 2; }
         .card-label { font-size: 14px; color: #d4d4d8; font-weight: 700; margin-bottom: 5px; }
-        .card-amount {
-            font-size: 50px; font-weight: 900;
-            background: linear-gradient(to right, #fff, var(--gold-light));
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            text-shadow: 0 4px 10px rgba(0,0,0,0.3);
-        }
-        
+        .card-amount { font-size: 50px; font-weight: 900; background: linear-gradient(to right, #fff, var(--gold-light)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 4px 10px rgba(0,0,0,0.3); }
         .seal-mark { position: absolute; left: 0; top: 50%; transform: translateY(-50%); opacity: 0.15; font-size: 80px; color: var(--gold); z-index: 1; }
-
-        .financial-status {
-            display: inline-block; margin-top: 15px; padding: 6px 14px;
-            border-radius: 10px; font-size: 13px; font-weight: 800;
-            background: rgba(255,255,255,0.08); color: var(--gold-light);
-            border: 1px solid rgba(212, 175, 55, 0.4); backdrop-filter: blur(5px);
-        }
-
-        .card-footer {
-            display: flex; justify-content: space-between; margin-top: 25px;
-            font-size: 13px; color: #a1a1aa; font-weight: 700; direction: rtl;
-            border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px; position: relative; z-index: 2;
-        }
+        .financial-status { display: inline-block; margin-top: 15px; padding: 6px 14px; border-radius: 10px; font-size: 13px; font-weight: 800; background: rgba(255,255,255,0.08); color: var(--gold-light); border: 1px solid rgba(212, 175, 55, 0.4); backdrop-filter: blur(5px); }
+        .card-footer { display: flex; justify-content: space-between; margin-top: 25px; font-size: 13px; color: #a1a1aa; font-weight: 700; direction: rtl; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px; position: relative; z-index: 2; }
 
         .btn-export {
-            background: white; color: var(--pink-900); width: 100%; padding: 18px;
-            border-radius: 20px; border: 2px solid var(--pink-100);
-            font-size: 16px; font-weight: 800; cursor: pointer;
-            display: flex; justify-content: center; align-items: center; gap: 8px;
-            box-shadow: 4px 4px 10px rgba(0,0,0,0.03), -4px -4px 10px rgba(255,255,255,0.8); transition: all 0.3s ease;
+            background: linear-gradient(135deg, var(--pink-600), var(--pink-500)); color: white; width: 100%; padding: 18px;
+            border-radius: 20px; border: none; font-size: 16px; font-weight: 800; cursor: pointer;
+            display: flex; justify-content: center; align-items: center; gap: 8px; box-shadow: 0 12px 24px rgba(225, 29, 72, 0.25); transition: all 0.3s ease;
         }
-        .btn-export:active { transform: translateY(2px); box-shadow: inset 4px 4px 10px rgba(0,0,0,0.03), inset -4px -4px 10px rgba(255,255,255,0.8); }
+        .btn-export:active { transform: translateY(2px); box-shadow: 0 6px 12px rgba(225, 29, 72, 0.2); }
 
-        @keyframes slideUpFade { from { opacity: 0; transform: translateY(40px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
+        /* --- Footer --- */
+        .app-footer {
+            text-align: center; padding: 20px; font-size: 12px; font-weight: 700; color: var(--gold);
+            background: rgba(255,255,255,0.8); backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(212, 175, 55, 0.2);
+            margin-top: auto;
+        }
+
+        /* --- Image Modal Overlay --- */
+        #imageModal {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(0,0,0,0.85); backdrop-filter: blur(15px); z-index: 9999;
+            display: none; flex-direction: column; justify-content: center; align-items: center;
+            opacity: 0; transition: opacity 0.3s ease; padding: 20px;
+        }
+        #finalSavedImage { max-width: 100%; border-radius: 24px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); transform: scale(0.9); transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+        .modal-instruction { color: white; font-size: 16px; font-weight: 800; margin-top: 25px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 10px; animation: bounce 2s infinite; }
+        .close-modal { position: absolute; top: calc(var(--safe-area-top) + 20px); right: 20px; background: rgba(255,255,255,0.2); color: white; border: none; width: 40px; height: 40px; border-radius: 50%; font-size: 20px; display: flex; justify-content: center; align-items: center; cursor: pointer; }
+        
+        @keyframes slideUpFade { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
     </style>
 </head>
 <body>
 
-<div id="splashScreen">
-    <i class="ph-fill ph-face-id biometric-icon"></i>
-    <div class="splash-text">يُرجى الانتظار</div>
-    <div class="splash-sub">جاري المصادقة الأمنية للحساب الماسي...</div>
-</div>
-
+<!-- Animated Backgrounds -->
 <div class="aurora-bg"></div>
 <canvas id="particles-canvas"></canvas>
 
-<div class="app-container" id="mainApp">
+<!-- Header -->
+<header class="app-header">
+    <div class="header-title"><i class="ph-fill ph-diamond" style="color:var(--pink-600)"></i> SOHA VIP</div>
+    <div class="header-date" id="headerDate"></div>
+</header>
+
+<div class="app-content" id="mainApp">
     
     <!-- Live Countdown Banner -->
     <div class="live-countdown-wrapper">
         <div class="countdown-title">
             <div class="live-dot"></div>
-            الوقت المتبقي حتى موعد الإيداع الرسمي
+            الوقت المتبقي لموعد الإيداع القادم
         </div>
         <div class="time-blocks">
-            <div class="time-block">
-                <div class="time-val" id="cd-days">00</div>
-                <div class="time-lbl">أيام</div>
-            </div>
-            <div class="time-block">
-                <div class="time-val" id="cd-hours">00</div>
-                <div class="time-lbl">ساعات</div>
-            </div>
-            <div class="time-block">
-                <div class="time-val" id="cd-minutes">00</div>
-                <div class="time-lbl">دقائق</div>
-            </div>
-            <div class="time-block">
-                <div class="time-val seconds-val" id="cd-seconds">00</div>
-                <div class="time-lbl">ثواني</div>
-            </div>
+            <div class="time-block"><div class="time-val" id="cd-days">00</div><div class="time-lbl">أيام</div></div>
+            <div class="time-block"><div class="time-val" id="cd-hours">00</div><div class="time-lbl">ساعات</div></div>
+            <div class="time-block"><div class="time-val" id="cd-minutes">00</div><div class="time-lbl">دقائق</div></div>
+            <div class="time-block"><div class="time-val seconds-val" id="cd-seconds">00</div><div class="time-lbl">ثواني</div></div>
         </div>
-        <!-- تنبيه السبت/الجمعة الذكي -->
         <div id="saturdayNote" class="saturday-note"></div>
     </div>
 
-    <header>
-        <div class="welcome-badge">
-            <i class="ph-fill ph-diamond"></i>
-            <span id="greetingText">مرحباً</span> يا سهى
-        </div>
-        <h1>الحساب الماسي</h1>
-        <div class="subtitle">نظام إدارة الثروات فائق التميز</div>
-    </header>
-
+    <!-- Input Card -->
     <div class="glass-card">
         <div class="input-wrapper">
             <label class="input-label">الرصيد المالي الحالي المُتاح 🌸</label>
             <i class="ph ph-currency-circle-dollar currency-symbol"></i>
-            <input type="number" id="balanceInput" placeholder="0" inputmode="decimal" min="0" oninput="if(this.value < 0) this.value = Math.abs(this.value);">
+            <input type="number" id="balanceInput" placeholder="0" inputmode="decimal" oninput="debounceProcess()">
         </div>
         
         <div class="quick-actions">
-            <!-- الأزرار السريعة بتعمل تحديث فوري -->
             <button class="quick-btn" onclick="adjustBalance(-50)">- 50 ₪</button>
             <button class="quick-btn" onclick="adjustBalance(-100)">- 100 ₪</button>
             <button class="quick-btn" onclick="adjustBalance(100)">+ 100 ₪</button>
         </div>
-        
-        <button class="btn-primary" id="calcBtn" onclick="processData()">
-            <i class="ph-bold ph-magic-wand"></i>
-            تحديث البيانات المالية
-        </button>
     </div>
 
+    <!-- Dashboard & VIP Card -->
     <div id="dashboard">
         <div class="vip-card-wrapper" id="captureArea">
             <div class="vip-card">
@@ -333,7 +245,6 @@
                 <div class="card-body">
                     <div class="card-label">الحد اليومي المسموح به للإنفاق</div>
                     <div class="card-amount"><span id="dailyAmountCard">0</span> <span style="font-size: 24px;">₪</span></div>
-                    <!-- أسلوب الكلام الجديد -->
                     <div class="financial-status" id="healthStatus">جاري التحليل...</div>
                 </div>
                 <div class="card-footer">
@@ -343,10 +254,26 @@
             </div>
         </div>
 
-        <button class="btn-export" onclick="downloadVIPCard()">
-            <i class="ph-bold ph-export"></i>
-            توثيق وحفظ البطاقة الماسية
+        <button class="btn-export" onclick="generateAutoSaveImage()">
+            <i class="ph-bold ph-image"></i>
+            إنشاء البطاقة لحفظها بالصور
         </button>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer class="app-footer">
+    صُمم وطُور بحب لسهى 🌸<br>
+    <span style="font-size: 10px; opacity: 0.7;">بواسطة أبو جواهر &copy; 2026</span>
+</footer>
+
+<!-- Image Modal for iOS Native Saving -->
+<div id="imageModal">
+    <button class="close-modal" onclick="closeModal()"><i class="ph-bold ph-x"></i></button>
+    <img id="finalSavedImage" src="" alt="VIP Card">
+    <div class="modal-instruction">
+        <i class="ph-fill ph-hand-tap" style="font-size: 32px; color: var(--gold);"></i>
+        <span>اضغطي مطولاً على البطاقة<br>واختاري "حفظ في الصور" (Save to Photos)</span>
     </div>
 </div>
 
@@ -356,29 +283,15 @@
         if (["e", "E", "+", "-"].includes(e.key)) e.preventDefault();
     });
 
-    window.addEventListener('load', () => {
-        setTimeout(() => {
-            const splash = document.getElementById('splashScreen');
-            const mainApp = document.getElementById('mainApp');
-            splash.style.opacity = '0';
-            setTimeout(() => {
-                splash.style.display = 'none';
-                mainApp.style.opacity = '1';
-                mainApp.style.transform = 'translateY(0)';
-            }, 600);
-        }, 1500);
-    });
-
     /* --- Particles Effect --- */
     const canvas = document.getElementById('particles-canvas');
     const ctx = canvas.getContext('2d');
     canvas.width = window.innerWidth; canvas.height = window.innerHeight;
     const particles = [];
-    for (let i = 0; i < 25; i++) {
+    for (let i = 0; i < 20; i++) {
         particles.push({
             x: Math.random() * canvas.width, y: Math.random() * canvas.height,
-            radius: Math.random() * 2, vx: (Math.random() - 0.5) * 0.4, vy: (Math.random() - 0.5) * 0.4,
-            alpha: Math.random() * 0.6 + 0.2
+            radius: Math.random() * 2, vx: (Math.random() - 0.5) * 0.4, vy: (Math.random() - 0.5) * 0.4, alpha: Math.random() * 0.6 + 0.2
         });
     }
     function animateParticles() {
@@ -394,66 +307,46 @@
     }
     animateParticles();
 
-    /* --- إصلاح ثغرة يوم القبضة (تحديد موعد القبضة القادم بدقة) --- */
+    /* --- Payday Logic & Countdown --- */
     function getNextPayday(now) {
         let targetYear = now.getFullYear();
         let targetMonth = now.getMonth();
-        // التعديل: إذا كان اليوم 9 أو أكثر، بدنا نحسب للشهر الجاي، مش لنفس اليوم!
         if (now.getDate() >= 9) {
             targetMonth++;
-            if (targetMonth > 11) {
-                targetMonth = 0;
-                targetYear++;
-            }
+            if (targetMonth > 11) { targetMonth = 0; targetYear++; }
         }
         return new Date(targetYear, targetMonth, 9, 0, 0, 0);
     }
 
-    /* --- Live Countdown & Smart Saturday Logic --- */
     function updateCountdown() {
         const now = new Date();
         const target = getNextPayday(now);
         const satNote = document.getElementById('saturdayNote');
-        
-        // التحقق من أن يوم 9 يصادف السبت
         const isTargetSaturday = target.getDay() === 6;
 
         if (now.getDate() === 9) {
-            // يوم الإيداع الرسمي - عرض الاحتفال
-            document.getElementById('cd-days').innerText = "00";
-            document.getElementById('cd-hours').innerText = "00";
-            document.getElementById('cd-minutes').innerText = "00";
-            document.getElementById('cd-seconds').innerText = "00";
-            document.querySelector('.countdown-title').innerHTML = "<i class='ph-fill ph-confetti' style='color:#4ade80; font-size:18px;'></i> اليوم هو موعد الإيداع الرسمي! 🎉";
+            document.getElementById('cd-days').innerText = "00"; document.getElementById('cd-hours').innerText = "00";
+            document.getElementById('cd-minutes').innerText = "00"; document.getElementById('cd-seconds').innerText = "00";
+            document.querySelector('.countdown-title').innerHTML = "<i class='ph-fill ph-confetti' style='color:#4ade80;'></i> اليوم هو موعد الإيداع الرسمي! 🎉";
             satNote.style.display = 'none';
         } else {
-            // الأيام العادية
-            document.querySelector('.countdown-title').innerHTML = "<div class='live-dot'></div> الوقت المتبقي حتى موعد الإيداع القادم";
-            
+            document.querySelector('.countdown-title').innerHTML = "<div class='live-dot'></div> الوقت المتبقي لموعد الإيداع القادم";
             let diffTime = target.getTime() - now.getTime();
-            if (diffTime < 0) diffTime = 0; // صمام أمان
+            if (diffTime < 0) diffTime = 0; 
 
-            const days = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((diffTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((diffTime % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((diffTime % (1000 * 60)) / 1000);
-
-            document.getElementById('cd-days').innerText = days.toString().padStart(2, '0');
-            document.getElementById('cd-hours').innerText = hours.toString().padStart(2, '0');
-            document.getElementById('cd-minutes').innerText = minutes.toString().padStart(2, '0');
-            document.getElementById('cd-seconds').innerText = seconds.toString().padStart(2, '0');
+            document.getElementById('cd-days').innerText = Math.floor(diffTime / (1000 * 60 * 60 * 24)).toString().padStart(2, '0');
+            document.getElementById('cd-hours').innerText = Math.floor((diffTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)).toString().padStart(2, '0');
+            document.getElementById('cd-minutes').innerText = Math.floor((diffTime % (1000 * 60 * 60)) / (1000 * 60)).toString().padStart(2, '0');
+            document.getElementById('cd-seconds').innerText = Math.floor((diffTime % (1000 * 60)) / 1000).toString().padStart(2, '0');
             
-            // تنبيه السبت
             if (isTargetSaturday) {
                 satNote.style.display = 'block';
                 if (now.getDate() === 8) {
-                    satNote.style.color = "#e11d48"; 
-                    satNote.style.borderColor = "rgba(225, 29, 72, 0.3)";
-                    satNote.innerHTML = "<i class='ph-fill ph-warning-circle'></i> تنويه هام: غداً السبت هو موعد الإيداع الرسمي، لذا يُحتمل جداً إيداع الراتب اليوم الجمعة!";
+                    satNote.style.color = "#e11d48"; satNote.style.borderColor = "rgba(225, 29, 72, 0.3)";
+                    satNote.innerHTML = "<i class='ph-fill ph-warning-circle'></i> غداً السبت هو موعد الإيداع الرسمي، لذا يُحتمل جداً إيداع الراتب اليوم الجمعة!";
                 } else {
-                    satNote.style.color = "#b48608"; 
-                    satNote.style.borderColor = "rgba(212, 175, 55, 0.3)";
-                    satNote.innerHTML = "<i class='ph-fill ph-info'></i> ملاحظة: يُصادف موعد الإيداع القادم يوم السبت، لذا يُحتمل إيداع الراتب مسبقاً يوم الجمعة (8 الشهر).";
+                    satNote.style.color = "#b48608"; satNote.style.borderColor = "rgba(212, 175, 55, 0.3)";
+                    satNote.innerHTML = "<i class='ph-fill ph-info'></i> ملاحظة: يُصادف الإيداع القادم يوم السبت، لذا يُحتمل إيداعه يوم الجمعة (8 الشهر).";
                 }
             } else {
                 satNote.style.display = 'none';
@@ -463,21 +356,29 @@
     setInterval(updateCountdown, 1000);
     updateCountdown();
 
-    /* --- App Logic --- */
+    /* --- App Init & Fluid Logic --- */
     const today = new Date();
-    const hour = today.getHours();
-    let greeting = "طاب يومكِ";
-    if (hour < 12 && hour >= 4) greeting = "صباح الخير";
-    else if (hour >= 12 && hour < 18) greeting = "مساء الخير";
-    document.getElementById('greetingText').innerText = greeting;
+    document.getElementById('headerDate').innerText = today.toLocaleDateString('ar-EG', { weekday: 'long', month: 'long', day: 'numeric' });
     document.getElementById('cardDate').innerText = today.toLocaleDateString('ar-EG');
 
-    const saved = localStorage.getItem('soha_diamond_final_balance');
+    const saved = localStorage.getItem('soha_fluid_balance');
     if (saved) {
         document.getElementById('balanceInput').value = saved;
+        processData(false); // انسيابية: إظهار البطاقة فوراً إذا في رصيد محفوظ
     }
 
-    // دالة الأزرار السريعة (تحدث البيانات تلقائياً)
+    let debounceTimer;
+    function debounceProcess() {
+        clearTimeout(debounceTimer);
+        let val = document.getElementById('balanceInput').value;
+        if(val === "" || val < 0) {
+            document.getElementById('dashboard').style.display = 'none'; // إخفاء انسيابي
+            return;
+        }
+        document.getElementById('balanceInput').value = Math.abs(val); // منع السالب
+        debounceTimer = setTimeout(() => { processData(false); }, 300); // تحديث فوري وسلس
+    }
+
     function adjustBalance(amount) {
         const input = document.getElementById('balanceInput');
         let current = parseFloat(input.value) || 0;
@@ -485,25 +386,13 @@
         if (newVal < 0) newVal = 0;
         input.value = newVal;
         if (navigator.vibrate) navigator.vibrate(30);
-        
-        processData(false);
+        if(newVal === 0) { document.getElementById('dashboard').style.display = 'none'; } 
+        else { processData(false); }
     }
 
-    function animateValue(obj, start, end, duration) {
-        let startTimestamp = null;
-        const step = (timestamp) => {
-            if (!startTimestamp) startTimestamp = timestamp;
-            const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-            const currentNum = Math.floor(progress * (end - start) + start);
-            obj.innerHTML = currentNum.toLocaleString('en-US');
-            if (progress < 1) window.requestAnimationFrame(step);
-        };
-        window.requestAnimationFrame(step);
-    }
-
+    /* Holographic 3D Tilt */
     const cardWrapper = document.getElementById('captureArea');
     const hologram = document.getElementById('hologram');
-
     function handleMove(x, y, rect) {
         const centerX = rect.width / 2; const centerY = rect.height / 2;
         const rotateX = ((y - centerY) / centerY) * -8; const rotateY = ((x - centerX) / centerX) * 8;
@@ -511,10 +400,8 @@
         const percentX = (x / rect.width) * 100; const percentY = (y / rect.height) * 100;
         hologram.style.background = `radial-gradient(circle at ${percentX}% ${percentY}%, rgba(255,255,255,0.3) 0%, transparent 60%)`;
     }
-
     cardWrapper.addEventListener('mousemove', (e) => { const rect = cardWrapper.getBoundingClientRect(); handleMove(e.clientX - rect.left, e.clientY - rect.top, rect); });
     cardWrapper.addEventListener('touchmove', (e) => { const touch = e.touches[0]; const rect = cardWrapper.getBoundingClientRect(); handleMove(touch.clientX - rect.left, touch.clientY - rect.top, rect); }, {passive: true});
-
     const resetTransform = () => {
         cardWrapper.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
         hologram.style.background = `radial-gradient(circle at 50% 50%, rgba(255,255,255,0.15) 0%, transparent 60%)`;
@@ -522,20 +409,17 @@
     cardWrapper.addEventListener('mouseleave', resetTransform);
     cardWrapper.addEventListener('touchend', resetTransform);
 
-    function processData(playVibration = true) {
-        const input = document.getElementById('balanceInput');
-        const balance = parseFloat(input.value);
+    function processData(animate = true) {
+        const balance = parseFloat(document.getElementById('balanceInput').value);
         if (isNaN(balance) || balance <= 0) return;
 
-        if (playVibration && navigator.vibrate) navigator.vibrate([30, 50, 30]);
-        localStorage.setItem('soha_diamond_final_balance', balance);
+        localStorage.setItem('soha_fluid_balance', balance);
 
         const now = new Date();
         const target = getNextPayday(now);
         let diffTime = target.getTime() - now.getTime();
         let diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
         
-        // منع القسمة على صفر أو أرقام سالبة بيوم القبضة
         if (diffDays <= 0) diffDays = 1; 
 
         const daily = Math.floor(balance / diffDays);
@@ -543,7 +427,6 @@
         const statusEl = document.getElementById('healthStatus');
         const cardMessage = document.getElementById('cardMessage');
 
-        // أسلوب الكلام المباشر والمتغير حسب الوضع المادي لسهى
         if (daily >= 150) {
             statusEl.innerHTML = "<i class='ph-fill ph-star'></i> الوضع ممتاز جداً والخير كتير";
             statusEl.style.color = "#4ade80"; statusEl.style.borderColor = "rgba(74, 222, 128, 0.3)";
@@ -563,40 +446,61 @@
         }
 
         document.getElementById('dashboard').style.display = 'block';
-        animateValue(document.getElementById('dailyAmountCard'), 0, daily, 1000);
         
-        // إخفاء الكيبورد بعد التحليل
-        input.blur();
+        if(animate) {
+            let obj = document.getElementById('dailyAmountCard');
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / 500, 1);
+                obj.innerHTML = Math.floor(progress * daily).toLocaleString('en-US');
+                if (progress < 1) window.requestAnimationFrame(step);
+            };
+            window.requestAnimationFrame(step);
+        } else {
+            document.getElementById('dailyAmountCard').innerHTML = daily.toLocaleString('en-US');
+        }
     }
 
-    function downloadVIPCard() {
+    /* --- iOS Auto-Save Logic (Generating Image Overlay) --- */
+    function generateAutoSaveImage() {
         const area = document.getElementById('captureArea');
         const btn = document.querySelector('.btn-export');
+        const modal = document.getElementById('imageModal');
+        const finalImg = document.getElementById('finalSavedImage');
         
-        // تفريغ التأثيرات عشان الصورة تطلع مثالية بالآيفون (خلفية شفافة)
-        resetTransform();
+        resetTransform(); // تفريغ التأثيرات لالتقاط صورة نظيفة
         hologram.style.display = 'none';
-        btn.innerHTML = '<i class="ph-bold ph-spinner-gap ph-spin"></i> جاري التوثيق...';
+        btn.innerHTML = '<i class="ph-bold ph-spinner-gap ph-spin"></i> جاري تجهيز البطاقة...';
         
         setTimeout(() => {
             html2canvas(area, { 
-                backgroundColor: "transparent", // حل مشكلة الحواف البيضاء بسفاري
-                scale: 3, // دقة آمنة وممتازة للآيفون 16 برو ماكس لمنع الكراش
-                useCORS: true, 
-                logging: false, 
-                allowTaint: true
+                backgroundColor: "transparent", 
+                scale: 3, // دقة ممتازة وآمنة
+                useCORS: true, logging: false
             }).then(canvas => {
-                const link = document.createElement('a');
-                link.download = `Soha_VIP_Card.png`; link.href = canvas.toDataURL("image/png"); link.click();
+                const imgData = canvas.toDataURL("image/png");
+                finalImg.src = imgData;
                 
+                // إظهار المودال (النافذة المنبثقة) اللي فيها الصورة الحقيقية
+                modal.style.display = 'flex';
+                setTimeout(() => { 
+                    modal.style.opacity = '1'; 
+                    finalImg.style.transform = 'scale(1)';
+                }, 50);
+
                 hologram.style.display = 'block'; 
-                btn.innerHTML = '<i class="ph-fill ph-check-circle"></i> تم توثيق البطاقة بنجاح!';
-                setTimeout(() => { btn.innerHTML = '<i class="ph-bold ph-export"></i> توثيق وحفظ البطاقة الماسية'; }, 2500);
-            }).catch(err => {
-                hologram.style.display = 'block'; 
-                btn.innerHTML = 'حدث خطأ، حاول مرة أخرى';
+                btn.innerHTML = '<i class="ph-bold ph-image"></i> إنشاء البطاقة لحفظها بالصور';
             });
-        }, 300); 
+        }, 150); 
+    }
+
+    function closeModal() {
+        const modal = document.getElementById('imageModal');
+        const finalImg = document.getElementById('finalSavedImage');
+        modal.style.opacity = '0';
+        finalImg.style.transform = 'scale(0.9)';
+        setTimeout(() => { modal.style.display = 'none'; }, 300);
     }
 </script>
 
