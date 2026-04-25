@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
@@ -12,6 +13,7 @@
 
     <title>Soha Finance Royal - الحساب الماسي</title>
     
+    <!-- مكتبة التقاط الصور (إصدار مستقر) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     
@@ -103,6 +105,15 @@
             padding: 25px; transition: transform 0.3s ease;
         }
 
+        /* --- Welcome Badge (Dynamic Greeting) --- */
+        .welcome-badge {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: white; padding: 8px 20px; border-radius: 100px;
+            font-size: 15px; font-weight: 800; color: var(--pink-600);
+            box-shadow: 0 4px 15px rgba(225, 29, 72, 0.1); margin-bottom: 12px;
+            justify-content: center; width: auto; margin: 0 auto 15px;
+        }
+
         /* --- Input Section --- */
         .input-wrapper { position: relative; text-align: center; padding: 10px 0 0; }
         .input-label { font-size: 16px; font-weight: 800; color: var(--pink-900); margin-bottom: 10px; display: block; }
@@ -132,6 +143,16 @@
             margin-bottom: 24px; box-shadow: 0 30px 60px rgba(212, 175, 55, 0.3);
             transform-style: preserve-3d; perspective: 1000px;
         }
+        /* كلاس خاص لتسطيح الـ 3D أثناء التقاط الصورة لحل مشكلة التعليق بالآيفون */
+        .vip-card-wrapper.flatten-for-capture {
+            transform: none !important;
+            perspective: none !important;
+            transform-style: flat !important;
+        }
+        .vip-card-wrapper.flatten-for-capture .vip-card {
+            transform: none !important;
+        }
+
         .vip-card {
             background: linear-gradient(135deg, var(--obsidian) 0%, #27272a 100%);
             border-radius: 22px; padding: 30px; color: white;
@@ -184,6 +205,18 @@
         .modal-instruction { color: white; font-size: 16px; font-weight: 800; margin-top: 25px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 10px; animation: bounce 2s infinite; }
         .close-modal { position: absolute; top: calc(var(--safe-area-top) + 20px); right: 20px; background: rgba(255,255,255,0.2); color: white; border: none; width: 40px; height: 40px; border-radius: 50%; font-size: 20px; display: flex; justify-content: center; align-items: center; cursor: pointer; }
         
+        /* --- Splash Screen --- */
+        #splashScreen {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(255,255,255,0.98); backdrop-filter: blur(20px);
+            z-index: 9999; display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            transition: opacity 0.6s ease, visibility 0.6s;
+        }
+        .biometric-icon { font-size: 80px; color: var(--pink-600); margin-bottom: 20px; animation: pulseScan 1.5s infinite alternate; }
+        .splash-text { font-size: 20px; font-weight: 800; color: var(--pink-900); }
+        .splash-sub { font-size: 14px; color: var(--gold); margin-top: 8px; font-weight: 700; }
+        
         @keyframes slideUpFade { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
     </style>
@@ -194,6 +227,13 @@
 <div class="aurora-bg"></div>
 <canvas id="particles-canvas"></canvas>
 
+<!-- Security Splash Screen -->
+<div id="splashScreen">
+    <i class="ph-fill ph-face-id biometric-icon"></i>
+    <div class="splash-text">يُرجى الانتظار</div>
+    <div class="splash-sub">جاري المصادقة الأمنية للحساب الماسي...</div>
+</div>
+
 <!-- Header -->
 <header class="app-header">
     <div class="header-title"><i class="ph-fill ph-diamond" style="color:var(--pink-600)"></i> SOHA VIP</div>
@@ -202,6 +242,14 @@
 
 <div class="app-content" id="mainApp">
     
+    <!-- Live Dynamic Greeting Badge -->
+    <div style="text-align: center;">
+        <div class="welcome-badge">
+            <i class="ph-fill ph-sparkle"></i>
+            <span id="greetingText">مرحباً</span> يا سهى
+        </div>
+    </div>
+
     <!-- Live Countdown Banner -->
     <div class="live-countdown-wrapper">
         <div class="countdown-title">
@@ -278,7 +326,7 @@
 </div>
 
 <script>
-    // منع الحروف الإنجليزية والرموز الخاصة بالإدخال
+    // منع الحروف والرموز الخاطئة في خانة الإدخال
     document.getElementById("balanceInput").addEventListener("keydown", function(e) {
         if (["e", "E", "+", "-"].includes(e.key)) e.preventDefault();
     });
@@ -306,6 +354,16 @@
         requestAnimationFrame(animateParticles);
     }
     animateParticles();
+
+    /* --- Dynamic Greeting Logic --- */
+    function updateGreeting() {
+        const hour = new Date().getHours();
+        let greetingText = "طابت أوقاتكِ";
+        if (hour >= 5 && hour < 12) greetingText = "صباح الخير";
+        else if (hour >= 12 && hour < 18) greetingText = "مساء الخير";
+        else greetingText = "طابت ليلتكِ";
+        document.getElementById('greetingText').innerText = greetingText;
+    }
 
     /* --- Payday Logic & Countdown --- */
     function getNextPayday(now) {
@@ -353,30 +411,51 @@
             }
         }
     }
-    setInterval(updateCountdown, 1000);
-    updateCountdown();
 
-    /* --- App Init & Fluid Logic --- */
-    const today = new Date();
-    document.getElementById('headerDate').innerText = today.toLocaleDateString('ar-EG', { weekday: 'long', month: 'long', day: 'numeric' });
-    document.getElementById('cardDate').innerText = today.toLocaleDateString('ar-EG');
+    /* --- App Init --- */
+    window.addEventListener('load', () => {
+        // تحديث التحية والتاريخ
+        updateGreeting();
+        setInterval(updateGreeting, 60000); // تحديث التحية كل دقيقة
+        
+        const today = new Date();
+        document.getElementById('headerDate').innerText = today.toLocaleDateString('ar-EG', { weekday: 'long', month: 'long', day: 'numeric' });
+        document.getElementById('cardDate').innerText = today.toLocaleDateString('ar-EG');
+        
+        // تشغيل العداد
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
 
-    const saved = localStorage.getItem('soha_fluid_balance');
-    if (saved) {
-        document.getElementById('balanceInput').value = saved;
-        processData(false); // انسيابية: إظهار البطاقة فوراً إذا في رصيد محفوظ
-    }
+        // إخفاء شاشة البداية
+        setTimeout(() => {
+            const splash = document.getElementById('splashScreen');
+            const mainApp = document.getElementById('mainApp');
+            splash.style.opacity = '0';
+            setTimeout(() => {
+                splash.style.display = 'none';
+                mainApp.style.opacity = '1';
+                mainApp.style.transform = 'translateY(0)';
+            }, 600);
+        }, 1500);
+
+        // استرجاع الرصيد السابق
+        const saved = localStorage.getItem('soha_fluid_balance');
+        if (saved) {
+            document.getElementById('balanceInput').value = saved;
+            processData(false); // إظهار البطاقة فوراً وبدون اهتزاز
+        }
+    });
 
     let debounceTimer;
     function debounceProcess() {
         clearTimeout(debounceTimer);
         let val = document.getElementById('balanceInput').value;
         if(val === "" || val < 0) {
-            document.getElementById('dashboard').style.display = 'none'; // إخفاء انسيابي
+            document.getElementById('dashboard').style.display = 'none';
             return;
         }
-        document.getElementById('balanceInput').value = Math.abs(val); // منع السالب
-        debounceTimer = setTimeout(() => { processData(false); }, 300); // تحديث فوري وسلس
+        document.getElementById('balanceInput').value = Math.abs(val);
+        debounceTimer = setTimeout(() => { processData(false); }, 300);
     }
 
     function adjustBalance(amount) {
@@ -462,37 +541,51 @@
         }
     }
 
-    /* --- iOS Auto-Save Logic (Generating Image Overlay) --- */
+    /* --- iOS Auto-Save Fix (Crash Prevention) --- */
     function generateAutoSaveImage() {
         const area = document.getElementById('captureArea');
         const btn = document.querySelector('.btn-export');
         const modal = document.getElementById('imageModal');
         const finalImg = document.getElementById('finalSavedImage');
         
-        resetTransform(); // تفريغ التأثيرات لالتقاط صورة نظيفة
+        // إجبار المتصفح على تسطيح العنصر بالكامل لمنع التعليق (Crash)
+        area.classList.add('flatten-for-capture');
         hologram.style.display = 'none';
-        btn.innerHTML = '<i class="ph-bold ph-spinner-gap ph-spin"></i> جاري تجهيز البطاقة...';
         
+        btn.innerHTML = '<i class="ph-bold ph-spinner-gap ph-spin"></i> جاري تجهيز البطاقة...';
+        btn.disabled = true;
+        
+        // إعطاء وقت للمتصفح لتطبيق التسوية قبل الالتقاط
         setTimeout(() => {
             html2canvas(area, { 
-                backgroundColor: "transparent", 
-                scale: 3, // دقة ممتازة وآمنة
-                useCORS: true, logging: false
+                backgroundColor: null, 
+                scale: 3, // دقة ممتازة لآيفون برو ماكس
+                useCORS: true, 
+                logging: false
             }).then(canvas => {
                 const imgData = canvas.toDataURL("image/png");
                 finalImg.src = imgData;
                 
-                // إظهار المودال (النافذة المنبثقة) اللي فيها الصورة الحقيقية
                 modal.style.display = 'flex';
                 setTimeout(() => { 
                     modal.style.opacity = '1'; 
                     finalImg.style.transform = 'scale(1)';
                 }, 50);
 
+                // استرجاع الـ 3D بعد الصورة
+                area.classList.remove('flatten-for-capture');
                 hologram.style.display = 'block'; 
                 btn.innerHTML = '<i class="ph-bold ph-image"></i> إنشاء البطاقة لحفظها بالصور';
+                btn.disabled = false;
+            }).catch(error => {
+                console.error("خطأ في حفظ الصورة:", error);
+                alert("صار تعليق بسيط، جربي كمان مرة!");
+                area.classList.remove('flatten-for-capture');
+                hologram.style.display = 'block'; 
+                btn.innerHTML = '<i class="ph-bold ph-image"></i> إنشاء البطاقة لحفظها بالصور';
+                btn.disabled = false;
             });
-        }, 150); 
+        }, 300); 
     }
 
     function closeModal() {
