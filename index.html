@@ -14,7 +14,6 @@
 
     <title>Soha Finance Royal - الحساب الماسي</title>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
 
     <style>
@@ -879,41 +878,160 @@
     cardWrapper.addEventListener('mouseleave', resetTransform);
     cardWrapper.addEventListener('touchend', resetTransform);
 
-    /* ================= Image export ================= */
+    /* ================= Image export (رسم مباشر بدون مكتبات خارجية) ================= */
     let currentBlob = null;
+
+    function rr(c, x, y, w, h, r) {
+        c.beginPath();
+        c.moveTo(x + r, y);
+        c.lineTo(x + w - r, y); c.quadraticCurveTo(x + w, y, x + w, y + r);
+        c.lineTo(x + w, y + h - r); c.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+        c.lineTo(x + r, y + h); c.quadraticCurveTo(x, y + h, x, y + h - r);
+        c.lineTo(x, y + r); c.quadraticCurveTo(x, y, x + r, y);
+        c.closePath();
+    }
+
+    function drawCard() {
+        const W = 400, H = 390, SC = 3, P = 26;
+        const cv = document.createElement('canvas');
+        cv.width = W * SC; cv.height = H * SC;
+        const c = cv.getContext('2d');
+        c.scale(SC, SC);
+        const F = (w, s) => `${w} ${s}px Tajawal, -apple-system, "Segoe UI", sans-serif`;
+        const txt = (t, x, y, font, color, align = 'right', dir = 'rtl') => {
+            c.font = font; c.fillStyle = color; c.textAlign = align; c.direction = dir; c.fillText(t, x, y);
+        };
+
+        // إطار ذهبي
+        const g1 = c.createLinearGradient(0, 0, W, H);
+        g1.addColorStop(0, '#d4af37'); g1.addColorStop(0.5, '#ffffff'); g1.addColorStop(1, '#d4af37');
+        rr(c, 0, 0, W, H, 24); c.fillStyle = g1; c.fill();
+
+        // خلفية سوداء
+        const g2 = c.createLinearGradient(0, 0, W, H);
+        g2.addColorStop(0, '#0f0f11'); g2.addColorStop(1, '#27272a');
+        rr(c, 2, 2, W - 4, H - 4, 22); c.fillStyle = g2; c.fill();
+
+        c.save();
+        rr(c, 2, 2, W - 4, H - 4, 22); c.clip();
+        // نقش خفيف
+        c.fillStyle = 'rgba(212,175,55,0.06)';
+        for (let x = 10; x < W; x += 30) for (let y = 10; y < H; y += 30) { c.fillRect(x - 3, y - 0.5, 6, 1); c.fillRect(x - 0.5, y - 3, 1, 6); }
+        // لمعة
+        const rg = c.createRadialGradient(W * 0.7, H * 0.2, 0, W * 0.7, H * 0.2, W * 0.7);
+        rg.addColorStop(0, 'rgba(255,255,255,0.07)'); rg.addColorStop(1, 'rgba(255,255,255,0)');
+        c.fillStyle = rg; c.fillRect(0, 0, W, H);
+        // ختم ألماسة باهت
+        c.strokeStyle = 'rgba(212,175,55,0.13)'; c.lineWidth = 4;
+        c.beginPath(); c.moveTo(40, 120); c.lineTo(70, 90); c.lineTo(110, 90); c.lineTo(140, 120); c.lineTo(90, 185); c.closePath(); c.stroke();
+        c.beginPath(); c.moveTo(40, 120); c.lineTo(140, 120); c.stroke();
+        c.restore();
+
+        // الشريحة
+        const cg = c.createLinearGradient(W - P - 44, 26, W - P, 60);
+        cg.addColorStop(0, '#ffd700'); cg.addColorStop(0.5, '#b8860b'); cg.addColorStop(1, '#ffd700');
+        rr(c, W - P - 44, 26, 44, 34, 8); c.fillStyle = cg; c.fill();
+        c.fillStyle = 'rgba(0,0,0,0.3)'; c.fillRect(W - P - 44, 38, 44, 1);
+
+        // الشعار
+        c.font = F(900, 17); c.fillStyle = '#d4af37'; c.textAlign = 'left'; c.direction = 'ltr';
+        let lx = P;
+        for (const ch of 'DIAMOND ELITE') { c.fillText(ch, lx, 49); lx += c.measureText(ch).width + 2.5; }
+
+        // العنوان
+        txt('الحد اليومي المسموح به للإنفاق', W - P, 98, F(700, 14), '#d4d4d8');
+
+        // المبلغ
+        const amount = $('dailyAmountCard').textContent;
+        c.font = F(900, 50); c.direction = 'ltr'; c.textAlign = 'right';
+        const aw = c.measureText(amount).width;
+        const ag = c.createLinearGradient(W - P - aw, 0, W - P, 0);
+        ag.addColorStop(0, '#f3e5ab'); ag.addColorStop(1, '#ffffff');
+        c.fillStyle = ag; c.fillText(amount, W - P, 152);
+        txt('₪', W - P - aw - 8, 150, F(900, 24), '#f3e5ab', 'right', 'ltr');
+
+        // حالة الوضع
+        const stEl = $('healthStatus');
+        const stText = stEl.textContent.trim();
+        const stColor = stEl.style.color || '#f3e5ab';
+        c.font = F(800, 13);
+        const sw = c.measureText(stText).width + 28;
+        rr(c, W - P - sw, 168, sw, 28, 10);
+        c.fillStyle = 'rgba(255,255,255,0.08)'; c.fill();
+        c.globalAlpha = 0.5; c.strokeStyle = stColor; c.lineWidth = 1; c.stroke(); c.globalAlpha = 1;
+        txt(stText, W - P - 14, 187, F(800, 13), stColor);
+
+        // التقدّم
+        const over = $('todayBar').classList.contains('over');
+        txt(`صرفتي اليوم: ${$('spentTodayCard').textContent} ₪`, W - P, 228, F(700, 12), '#d4d4d8');
+        txt($('leftTodayLabel').textContent.trim(), P, 228, F(700, 12), over ? '#f87171' : '#d4d4d8', 'left');
+        rr(c, P, 236, W - 2 * P, 8, 4); c.fillStyle = 'rgba(255,255,255,0.1)'; c.fill();
+        const pct = Math.min(100, parseFloat($('todayBar').style.width) || 0) / 100;
+        if (pct > 0) {
+            const bw = Math.max(8, (W - 2 * P) * pct);
+            const bg = c.createLinearGradient(W - P - bw, 0, W - P, 0);
+            if (over) { bg.addColorStop(0, '#ef4444'); bg.addColorStop(1, '#f87171'); }
+            else { bg.addColorStop(0, '#f3e5ab'); bg.addColorStop(1, '#d4af37'); }
+            rr(c, W - P - bw, 236, bw, 8, 4); c.fillStyle = bg; c.fill();
+        }
+
+        // الإحصائيات (من اليمين لليسار)
+        const stats = [
+            [$('statBalance').textContent, 'الرصيد ₪'],
+            [$('statDays').textContent, 'يوم للإيداع'],
+            [$('statSaved').textContent, 'وفّرتي اليوم ₪']
+        ];
+        const gap = 8, bw3 = (W - 2 * P - gap * 2) / 3;
+        stats.forEach((s, i) => {
+            const x = W - P - (i + 1) * bw3 - i * gap;
+            rr(c, x, 260, bw3, 54, 12);
+            c.fillStyle = 'rgba(255,255,255,0.05)'; c.fill();
+            c.strokeStyle = 'rgba(255,255,255,0.08)'; c.lineWidth = 1; c.stroke();
+            txt(s[0], x + bw3 / 2, 285, F(900, 16), '#ffffff', 'center', 'ltr');
+            txt(s[1], x + bw3 / 2, 303, F(700, 10), '#a1a1aa', 'center');
+        });
+
+        // الفوتر
+        c.fillStyle = 'rgba(255,255,255,0.1)'; c.fillRect(P, 332, W - 2 * P, 1);
+        txt($('cardMessage').textContent, W - P, 360, F(700, 12), '#a1a1aa');
+        txt($('cardDate').textContent, P, 360, F(700, 12), '#a1a1aa', 'left');
+
+        return cv;
+    }
+
     function generateAutoSaveImage() {
-        if (typeof html2canvas === 'undefined') { toast('مكتبة الصور ما تحمّلت، تأكدي من الإنترنت وجربي كمان مرة'); return; }
         const btn = $('exportBtn');
-        resetTransform();
-        cardWrapper.classList.add('flatten-for-capture');
-        hologram.style.display = 'none';
         btn.innerHTML = '<i class="ph-bold ph-spinner-gap ph-spin"></i> جاري تجهيز البطاقة...';
         btn.disabled = true;
-
         const restore = () => {
-            cardWrapper.classList.remove('flatten-for-capture');
-            hologram.style.display = '';
             btn.innerHTML = '<i class="ph-bold ph-image"></i> إنشاء البطاقة لحفظها بالصور';
             btn.disabled = false;
         };
 
-        const go = () => html2canvas(cardWrapper, { backgroundColor: null, scale: Math.min(3, (window.devicePixelRatio || 2) + 1), useCORS: true, logging: false })
-            .then(canvas => {
-                $('finalSavedImage').src = canvas.toDataURL('image/png');
+        // نتأكد إن خط تجوال جاهز (بحد أقصى ثانية ونص)
+        let fontWait = Promise.resolve();
+        try {
+            if (document.fonts && document.fonts.load) {
+                fontWait = Promise.race([
+                    Promise.all([document.fonts.load('900 50px Tajawal'), document.fonts.load('700 14px Tajawal'), document.fonts.load('800 13px Tajawal')]),
+                    new Promise(r => setTimeout(r, 1500))
+                ]).catch(() => {});
+            }
+        } catch (e) {}
+
+        fontWait.then(() => {
+            try {
+                const cv = drawCard();
+                $('finalSavedImage').src = cv.toDataURL('image/png');
                 currentBlob = null;
-                canvas.toBlob(b => { currentBlob = b; updateShareBtn(); }, 'image/png');
+                if (cv.toBlob) cv.toBlob(b => { currentBlob = b; updateShareBtn(); }, 'image/png');
                 openModal();
-                restore();
-            })
-            .catch(err => {
+            } catch (err) {
                 console.error('خطأ في حفظ الصورة:', err);
                 toast('صار تعليق بسيط، جربي كمان مرة!');
-                restore();
-            });
-
-        // نستنى الخطوط تكون جاهزة ونعطي وقت لتطبيق التسطيح
-        const fontsReady = document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve();
-        fontsReady.then(() => setTimeout(go, 250));
+            }
+            restore();
+        });
     }
 
     function canShareFiles() {
