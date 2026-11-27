@@ -4,29 +4,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Soha VIP">
     <meta name="theme-color" content="#fff1f2">
-    
+
     <link rel="apple-touch-icon" href="https://img.icons8.com/ios-filled/180/e11d48/diamond--v1.png">
     <link rel="icon" type="image/png" href="https://img.icons8.com/ios-filled/180/e11d48/diamond--v1.png">
 
     <title>Soha Finance Royal - الحساب الماسي</title>
-    
-    <!-- مكتبة التقاط الصور (إصدار مستقر) -->
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
-    
+
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap');
 
         :root {
             --pink-50: #fff1f2; --pink-100: #ffe4e6; --pink-500: #f43f5e;
             --pink-600: #e11d48; --pink-900: #881337;
-            --gold: #d4af37; --gold-light: #f3e5ab;
-            --obsidian: #0f0f11; --text-dark: #1f2937;
+            --gold: #d4af37; --gold-light: #f3e5ab; --gold-dark: #b48608;
+            --obsidian: #0f0f11; --text-dark: #1f2937; --muted: #9f6b7a;
             --glass-bg: rgba(255, 255, 255, 0.75); --glass-border: rgba(255, 255, 255, 0.95);
-            --safe-area-top: env(safe-area-inset-top, 40px);
+            --safe-area-top: env(safe-area-inset-top, 20px);
             --safe-area-bottom: env(safe-area-inset-bottom, 20px);
         }
 
@@ -38,196 +38,295 @@
         }
 
         body {
-            margin: 0; min-height: 100vh;
+            margin: 0; min-height: 100vh; min-height: 100dvh;
             background-color: var(--pink-50);
             color: var(--text-dark);
             overflow-x: hidden;
             display: flex; flex-direction: column;
         }
+        button { font-family: inherit; }
 
         /* --- Animated Background --- */
         .aurora-bg {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -2;
+            position: fixed; inset: 0; z-index: -2;
             background: linear-gradient(45deg, #ffe4e6, #fce7f3, #fdf2f8, #fefce8);
             background-size: 400% 400%; animation: gradientBG 15s ease infinite;
         }
-        #particles-canvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; pointer-events: none; }
+        #particles-canvas { position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: -1; pointer-events: none; }
         @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
 
         /* --- Header --- */
         .app-header {
-            padding: calc(var(--safe-area-top) + 15px) 20px 15px;
+            padding: calc(var(--safe-area-top) + 12px) 20px 12px;
             background: rgba(255,255,255,0.85);
-            backdrop-filter: blur(15px);
+            backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
             border-bottom: 1px solid rgba(225,29,72,0.1);
             position: sticky; top: 0; z-index: 100;
-            display: flex; justify-content: space-between; align-items: center;
+            display: flex; justify-content: space-between; align-items: center; gap: 10px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.03);
         }
         .header-title { font-size: 20px; font-weight: 900; color: var(--pink-900); display: flex; align-items: center; gap: 8px; }
-        .header-date { font-size: 12px; font-weight: 700; color: var(--gold); background: var(--pink-50); padding: 6px 12px; border-radius: 20px;}
+        .header-left { display: flex; align-items: center; gap: 8px; }
+        .header-date { font-size: 12px; font-weight: 700; color: var(--gold-dark); background: var(--pink-50); padding: 6px 12px; border-radius: 20px; white-space: nowrap; }
+        .icon-btn {
+            width: 38px; height: 38px; border-radius: 50%; border: 1px solid rgba(225,29,72,0.1);
+            background: white; color: var(--pink-900); font-size: 19px; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; transition: transform .2s;
+        }
+        .icon-btn:active { transform: scale(0.9); }
 
         /* --- Main Content --- */
         .app-content {
             flex: 1;
-            padding: 20px 20px calc(var(--safe-area-bottom) + 80px);
+            padding: 20px 20px calc(var(--safe-area-bottom) + 40px);
             max-width: 450px; margin: 0 auto; width: 100%;
-            display: flex; flex-direction: column; gap: 20px;
+            display: flex; flex-direction: column; gap: 18px;
         }
 
-        /* --- Live Countdown Banner --- */
+        /* --- Countdown --- */
         .live-countdown-wrapper {
             background: rgba(255, 255, 255, 0.9); border-radius: 24px; padding: 15px;
             text-align: center; box-shadow: 0 10px 20px rgba(225, 29, 72, 0.05), inset 0 0 0 1px rgba(225, 29, 72, 0.1);
             position: relative; overflow: hidden;
         }
-        .live-countdown-wrapper::before { content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: var(--pink-600); }
+        .live-countdown-wrapper::before { content: ''; position: absolute; top: 0; right: 0; width: 4px; height: 100%; background: var(--pink-600); }
         .countdown-title { font-size: 13px; font-weight: 800; color: var(--pink-900); margin-bottom: 10px; display: flex; align-items: center; justify-content: center; gap: 6px; }
         .live-dot { width: 8px; height: 8px; background-color: #ef4444; border-radius: 50%; animation: blink 1s infinite; box-shadow: 0 0 5px #ef4444; }
-        @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
         .time-blocks { display: flex; justify-content: center; gap: 10px; direction: ltr; }
-        .time-block { background: var(--pink-50); border: 1px solid var(--pink-100); border-radius: 12px; padding: 8px; min-width: 60px; box-shadow: inset 2px 2px 5px rgba(0,0,0,0.02), inset -2px -2px 5px rgba(255,255,255,0.8); }
-        .time-val { font-size: 20px; font-weight: 900; color: var(--pink-600); font-family: system-ui, -apple-system; }
-        .time-lbl { font-size: 10px; font-weight: 700; color: var(--gold); text-transform: uppercase; margin-top: 2px;}
+        .time-block { background: var(--pink-50); border: 1px solid var(--pink-100); border-radius: 12px; padding: 8px; min-width: 62px; }
+        .time-val { font-size: 21px; font-weight: 900; color: var(--pink-600); font-variant-numeric: tabular-nums; font-family: system-ui, -apple-system, sans-serif; }
+        .time-lbl { font-size: 10px; font-weight: 700; color: var(--gold-dark); margin-top: 2px; }
         .seconds-val { color: var(--pink-900); }
-        
-        .saturday-note {
-            background: rgba(212, 175, 55, 0.1); border: 1px solid rgba(212, 175, 55, 0.3); color: #b48608;
-            padding: 8px 12px; border-radius: 12px; font-size: 12px; font-weight: 800; margin-top: 15px; display: none; animation: pulseFade 2s infinite;
-        }
-        @keyframes pulseFade { 0% { opacity: 0.7; } 50% { opacity: 1; text-shadow: 0 0 10px rgba(212,175,55,0.2); } 100% { opacity: 0.7; } }
+        .deposit-date-line { font-size: 12px; font-weight: 700; color: var(--muted); margin-top: 10px; }
 
-        /* --- Glass Card Base --- */
+        .saturday-note {
+            background: rgba(212, 175, 55, 0.1); border: 1px solid rgba(212, 175, 55, 0.3); color: var(--gold-dark);
+            padding: 8px 12px; border-radius: 12px; font-size: 12px; font-weight: 800; margin-top: 12px; display: none; line-height: 1.6;
+        }
+        .saturday-note.urgent { color: var(--pink-600); border-color: rgba(225, 29, 72, 0.3); background: rgba(225,29,72,0.06); }
+
+        /* --- Glass Card --- */
         .glass-card {
             background: var(--glass-bg); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
-            border: 1px solid var(--glass-border); border-radius: 32px;
+            border: 1px solid var(--glass-border); border-radius: 28px;
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.9);
-            padding: 25px; transition: transform 0.3s ease;
+            padding: 22px;
         }
+        .section-title { font-size: 15px; font-weight: 900; color: var(--pink-900); margin: 0 0 14px; display: flex; align-items: center; gap: 6px; }
+        .section-title .spacer { flex: 1; }
+        .section-title small { font-size: 12px; font-weight: 700; color: var(--muted); }
 
-        /* --- Welcome Badge (Dynamic Greeting) --- */
         .welcome-badge {
             display: inline-flex; align-items: center; gap: 8px;
             background: white; padding: 8px 20px; border-radius: 100px;
             font-size: 15px; font-weight: 800; color: var(--pink-600);
-            box-shadow: 0 4px 15px rgba(225, 29, 72, 0.1); margin-bottom: 12px;
-            justify-content: center; width: auto; margin: 0 auto 15px;
+            box-shadow: 0 4px 15px rgba(225, 29, 72, 0.1);
         }
 
-        /* --- Input Section --- */
-        .input-wrapper { position: relative; text-align: center; padding: 10px 0 0; }
-        .input-label { font-size: 16px; font-weight: 800; color: var(--pink-900); margin-bottom: 10px; display: block; }
-        .currency-symbol { position: absolute; left: 15px; top: 45px; font-size: 24px; color: var(--pink-500); font-weight: 800; opacity: 0.5; }
-        input {
-            width: 100%; background: transparent; border: none; font-size: 56px; font-weight: 900; color: var(--pink-600);
-            text-align: center; outline: none; padding: 0; letter-spacing: -1px; transition: all 0.3s ease;
+        /* --- Balance Input --- */
+        .input-wrapper { position: relative; text-align: center; }
+        .input-label { font-size: 16px; font-weight: 800; color: var(--pink-900); margin-bottom: 6px; display: block; }
+        .balance-row { display: flex; align-items: center; justify-content: center; gap: 6px; direction: ltr; }
+        .currency-symbol { font-size: 30px; color: var(--pink-500); font-weight: 800; opacity: 0.5; }
+        #balanceInput {
+            width: 100%; max-width: 280px; background: transparent; border: none; font-size: 54px; font-weight: 900; color: var(--pink-600);
+            text-align: center; outline: none; padding: 0; letter-spacing: -1px; transition: transform 0.3s ease;
+            -moz-appearance: textfield;
         }
-        input:focus { transform: scale(1.05); }
-        input::placeholder { color: rgba(225, 29, 72, 0.2); font-size: 40px; }
-        
-        .quick-actions { display: flex; justify-content: center; gap: 8px; margin-top: 15px; margin-bottom: 10px; }
+        #balanceInput::-webkit-outer-spin-button, #balanceInput::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+        #balanceInput:focus { transform: scale(1.04); }
+        #balanceInput::placeholder { color: rgba(225, 29, 72, 0.2); font-size: 40px; }
+        .input-hint { font-size: 12px; color: var(--muted); font-weight: 700; margin-top: 4px; }
+
+        .quick-actions { display: flex; justify-content: center; gap: 8px; margin-top: 16px; }
         .quick-btn {
-            background: rgba(255,255,255,0.9); border: 1px solid rgba(225,29,72,0.05); color: var(--pink-900);
-            font-weight: 800; font-size: 14px; padding: 10px 14px; border-radius: 16px; cursor: pointer;
+            background: rgba(255,255,255,0.9); border: 1px solid rgba(225,29,72,0.06); color: var(--pink-900);
+            font-weight: 800; font-size: 14px; padding: 11px 8px; border-radius: 16px; cursor: pointer; direction: ltr;
             transition: 0.2s; box-shadow: 4px 4px 10px rgba(0,0,0,0.03), -4px -4px 10px rgba(255,255,255,0.8); flex: 1;
         }
+        .quick-btn.plus { color: #15803d; }
         .quick-btn:active { transform: scale(0.92); box-shadow: inset 4px 4px 10px rgba(0,0,0,0.03); }
+        .quick-caption { font-size: 11px; color: var(--muted); text-align: center; margin-top: 8px; font-weight: 700; }
 
-        /* --- Dashboard Results --- */
-        #dashboard { display: none; animation: slideUpFade 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-        
-        /* --- The VIP Card --- */
+        /* --- Dashboard --- */
+        #dashboard { display: none; flex-direction: column; gap: 18px; animation: slideUpFade 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+
+        /* --- VIP Card --- */
         .vip-card-wrapper {
             position: relative; border-radius: 24px; padding: 2px;
             background: linear-gradient(135deg, var(--gold), #fff, var(--gold));
-            margin-bottom: 24px; box-shadow: 0 30px 60px rgba(212, 175, 55, 0.3);
-            transform-style: preserve-3d; perspective: 1000px;
+            box-shadow: 0 30px 60px rgba(212, 175, 55, 0.3);
+            transform-style: preserve-3d; transition: transform 0.15s ease-out;
         }
-        /* كلاس خاص لتسطيح الـ 3D أثناء التقاط الصورة لحل مشكلة التعليق بالآيفون */
-        .vip-card-wrapper.flatten-for-capture {
-            transform: none !important;
-            perspective: none !important;
-            transform-style: flat !important;
-        }
-        .vip-card-wrapper.flatten-for-capture .vip-card {
-            transform: none !important;
+        .vip-card-wrapper.flatten-for-capture { transform: none !important; transform-style: flat !important; box-shadow: none !important; }
+        .vip-card-wrapper.flatten-for-capture .vip-card { transform: none !important; }
+        /* html2canvas لا يدعم النص المتدرّج، فنستبدله بلون ذهبي ثابت أثناء الالتقاط */
+        .vip-card-wrapper.flatten-for-capture .card-amount {
+            background: none !important; -webkit-text-fill-color: var(--gold-light) !important; color: var(--gold-light) !important; text-shadow: none !important;
         }
 
         .vip-card {
             background: linear-gradient(135deg, var(--obsidian) 0%, #27272a 100%);
-            border-radius: 22px; padding: 30px; color: white;
+            border-radius: 22px; padding: 26px; color: white;
             position: relative; overflow: hidden; transform: translateZ(20px);
         }
         .vip-card::before {
-            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            content: ''; position: absolute; inset: 0;
             background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23d4af37' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
             z-index: 1; pointer-events: none;
         }
         .hologram-overlay {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            position: absolute; inset: 0;
             background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.15) 0%, transparent 60%);
-            mix-blend-mode: overlay; pointer-events: none; z-index: 5; transition: background 0.1s;
+            mix-blend-mode: overlay; pointer-events: none; z-index: 5;
         }
-        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; position: relative; z-index: 2; }
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; position: relative; z-index: 2; }
         .card-chip { width: 44px; height: 34px; background: linear-gradient(135deg, #ffd700, #b8860b, #ffd700); border-radius: 8px; box-shadow: inset 0 0 5px rgba(0,0,0,0.4); position: relative; }
         .card-chip::after { content: ''; position: absolute; top: 12px; left: 0; width: 100%; height: 1px; background: rgba(0,0,0,0.3); }
-        .card-logo { font-size: 19px; font-weight: 900; letter-spacing: 3px; color: var(--gold); }
-        .card-body { text-align: right; direction: rtl; position: relative; z-index: 2; }
-        .card-label { font-size: 14px; color: #d4d4d8; font-weight: 700; margin-bottom: 5px; }
-        .card-amount { font-size: 50px; font-weight: 900; background: linear-gradient(to right, #fff, var(--gold-light)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 4px 10px rgba(0,0,0,0.3); }
-        .seal-mark { position: absolute; left: 0; top: 50%; transform: translateY(-50%); opacity: 0.15; font-size: 80px; color: var(--gold); z-index: 1; }
-        .financial-status { display: inline-block; margin-top: 15px; padding: 6px 14px; border-radius: 10px; font-size: 13px; font-weight: 800; background: rgba(255,255,255,0.08); color: var(--gold-light); border: 1px solid rgba(212, 175, 55, 0.4); backdrop-filter: blur(5px); }
-        .card-footer { display: flex; justify-content: space-between; margin-top: 25px; font-size: 13px; color: #a1a1aa; font-weight: 700; direction: rtl; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px; position: relative; z-index: 2; }
+        .card-logo { font-size: 18px; font-weight: 900; letter-spacing: 3px; color: var(--gold); direction: ltr; }
+        .card-body { text-align: right; position: relative; z-index: 2; }
+        .card-label { font-size: 14px; color: #d4d4d8; font-weight: 700; margin-bottom: 4px; }
+        .card-amount { font-size: 50px; font-weight: 900; line-height: 1.15; background: linear-gradient(to right, #fff, var(--gold-light)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+        .card-amount .cur { font-size: 24px; }
+        .seal-mark { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); opacity: 0.12; font-size: 90px; color: var(--gold); z-index: 1; }
+        .financial-status { display: inline-flex; align-items: center; gap: 5px; margin-top: 10px; padding: 6px 14px; border-radius: 10px; font-size: 13px; font-weight: 800; background: rgba(255,255,255,0.08); color: var(--gold-light); border: 1px solid rgba(212, 175, 55, 0.4); }
 
-        .btn-export {
-            background: linear-gradient(135deg, var(--pink-600), var(--pink-500)); color: white; width: 100%; padding: 18px;
+        .card-progress { margin-top: 16px; position: relative; z-index: 2; }
+        .card-progress-top { display: flex; justify-content: space-between; font-size: 12px; font-weight: 700; color: #a1a1aa; margin-bottom: 6px; }
+        .card-progress-top b { color: #fff; }
+        .bar { height: 8px; border-radius: 10px; background: rgba(255,255,255,0.1); overflow: hidden; }
+        .bar-fill { height: 100%; width: 0%; border-radius: 10px; background: linear-gradient(90deg, var(--gold), var(--gold-light)); transition: width .5s ease, background .3s; }
+        .bar-fill.over { background: linear-gradient(90deg, #f87171, #ef4444); }
+
+        .card-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 16px; position: relative; z-index: 2; }
+        .card-stat { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 8px 6px; text-align: center; }
+        .card-stat .v { font-size: 15px; font-weight: 900; color: #fff; }
+        .card-stat .l { font-size: 10px; font-weight: 700; color: #a1a1aa; margin-top: 2px; }
+
+        .card-footer { display: flex; justify-content: space-between; gap: 10px; margin-top: 16px; font-size: 12px; color: #a1a1aa; font-weight: 700; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 13px; position: relative; z-index: 2; }
+
+        .btn-export, .btn-primary {
+            background: linear-gradient(135deg, var(--pink-600), var(--pink-500)); color: white; width: 100%; padding: 17px;
             border-radius: 20px; border: none; font-size: 16px; font-weight: 800; cursor: pointer;
-            display: flex; justify-content: center; align-items: center; gap: 8px; box-shadow: 0 12px 24px rgba(225, 29, 72, 0.25); transition: all 0.3s ease;
+            display: flex; justify-content: center; align-items: center; gap: 8px; box-shadow: 0 12px 24px rgba(225, 29, 72, 0.25); transition: all 0.25s ease;
         }
-        .btn-export:active { transform: translateY(2px); box-shadow: 0 6px 12px rgba(225, 29, 72, 0.2); }
+        .btn-export:active, .btn-primary:active { transform: translateY(2px); box-shadow: 0 6px 12px rgba(225, 29, 72, 0.2); }
+        .btn-export:disabled { opacity: .7; }
+
+        /* --- Expense entry --- */
+        .expense-row { display: flex; gap: 10px; align-items: stretch; }
+        .expense-amount {
+            flex: 1; min-width: 0; border: 1.5px solid var(--pink-100); background: white; border-radius: 16px;
+            font-size: 22px; font-weight: 900; color: var(--pink-600); text-align: center; padding: 12px; outline: none; direction: ltr;
+        }
+        .expense-amount:focus { border-color: var(--pink-500); }
+        .expense-note {
+            width: 100%; margin-top: 10px; border: 1.5px solid var(--pink-100); background: white; border-radius: 14px;
+            font-size: 15px; font-weight: 700; color: var(--text-dark); padding: 11px 14px; outline: none;
+        }
+        .expense-note:focus { border-color: var(--pink-500); }
+        .btn-add { width: auto; padding: 0 22px; border-radius: 16px; font-size: 15px; }
+        .chips { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 12px; }
+        .chip {
+            border: 1px solid var(--pink-100); background: white; color: var(--pink-900); border-radius: 100px;
+            padding: 7px 12px; font-size: 13px; font-weight: 800; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; transition: .2s;
+        }
+        .chip.active { background: var(--pink-600); color: white; border-color: var(--pink-600); }
+
+        /* --- Today list --- */
+        .exp-list { display: flex; flex-direction: column; gap: 8px; }
+        .exp-item { display: flex; align-items: center; gap: 12px; background: white; border-radius: 16px; padding: 10px 12px; border: 1px solid rgba(225,29,72,0.06); animation: slideUpFade .3s ease; }
+        .exp-icon { width: 38px; height: 38px; border-radius: 12px; background: var(--pink-50); color: var(--pink-600); display: flex; align-items: center; justify-content: center; font-size: 19px; flex-shrink: 0; }
+        .exp-info { flex: 1; min-width: 0; }
+        .exp-name { font-size: 14px; font-weight: 800; color: var(--text-dark); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .exp-time { font-size: 11px; font-weight: 700; color: var(--muted); }
+        .exp-amt { font-size: 15px; font-weight: 900; color: var(--pink-600); direction: ltr; white-space: nowrap; }
+        .exp-del { border: none; background: transparent; color: #c9a3ad; font-size: 18px; cursor: pointer; padding: 4px; }
+        .empty-state { text-align: center; color: var(--muted); font-size: 13px; font-weight: 700; padding: 14px 0 4px; }
+        .tomorrow-tip { margin-top: 12px; background: rgba(212,175,55,0.1); border: 1px dashed rgba(212,175,55,0.5); color: var(--gold-dark); border-radius: 14px; padding: 10px 12px; font-size: 13px; font-weight: 800; line-height: 1.6; display: none; }
 
         /* --- Footer --- */
         .app-footer {
-            text-align: center; padding: 20px; font-size: 12px; font-weight: 700; color: var(--gold);
-            background: rgba(255,255,255,0.8); backdrop-filter: blur(10px);
-            border-top: 1px solid rgba(212, 175, 55, 0.2);
-            margin-top: auto;
+            text-align: center; padding: 18px 20px calc(var(--safe-area-bottom) + 10px); font-size: 12px; font-weight: 700; color: var(--gold-dark);
+            background: rgba(255,255,255,0.8); border-top: 1px solid rgba(212, 175, 55, 0.2);
         }
 
-        /* --- Image Modal Overlay --- */
+        /* --- Image Modal --- */
         #imageModal {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background: rgba(0,0,0,0.85); backdrop-filter: blur(15px); z-index: 9999;
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,0.88); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); z-index: 9999;
             display: none; flex-direction: column; justify-content: center; align-items: center;
             opacity: 0; transition: opacity 0.3s ease; padding: 20px;
         }
-        #finalSavedImage { max-width: 100%; border-radius: 24px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); transform: scale(0.9); transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
-        .modal-instruction { color: white; font-size: 16px; font-weight: 800; margin-top: 25px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 10px; animation: bounce 2s infinite; }
-        .close-modal { position: absolute; top: calc(var(--safe-area-top) + 20px); right: 20px; background: rgba(255,255,255,0.2); color: white; border: none; width: 40px; height: 40px; border-radius: 50%; font-size: 20px; display: flex; justify-content: center; align-items: center; cursor: pointer; }
-        
-        /* --- Splash Screen --- */
+        #finalSavedImage { max-width: 100%; max-height: 60vh; border-radius: 24px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); transform: scale(0.9); transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); -webkit-touch-callout: default; }
+        .modal-instruction { color: white; font-size: 15px; font-weight: 800; margin-top: 22px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 8px; line-height: 1.6; }
+        .modal-share { margin-top: 18px; max-width: 320px; display: none; }
+        .close-modal { position: absolute; top: calc(var(--safe-area-top) + 16px); right: 20px; background: rgba(255,255,255,0.2); color: white; border: none; width: 42px; height: 42px; border-radius: 50%; font-size: 20px; display: flex; justify-content: center; align-items: center; cursor: pointer; }
+
+        /* --- Settings Sheet --- */
+        #sheetBackdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.35); z-index: 9000; display: none; opacity: 0; transition: opacity .25s; }
+        #settingsSheet {
+            position: fixed; left: 0; right: 0; bottom: 0; z-index: 9001; margin: 0 auto; max-width: 480px;
+            background: white; border-radius: 28px 28px 0 0; padding: 12px 22px calc(var(--safe-area-bottom) + 20px);
+            transform: translateY(110%); transition: transform .35s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 -10px 40px rgba(0,0,0,0.1);
+        }
+        #settingsSheet.open { transform: translateY(0); }
+        .sheet-handle { width: 44px; height: 5px; border-radius: 5px; background: #e5d5d9; margin: 0 auto 16px; }
+        .setting-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 0; border-bottom: 1px solid var(--pink-50); }
+        .setting-row:last-of-type { border-bottom: none; }
+        .setting-text b { display: block; font-size: 15px; font-weight: 800; color: var(--text-dark); }
+        .setting-text span { font-size: 12px; font-weight: 700; color: var(--muted); line-height: 1.5; }
+        .setting-row select {
+            border: 1.5px solid var(--pink-100); border-radius: 12px; padding: 8px 10px; font-size: 16px; font-weight: 800;
+            color: var(--pink-600); background: var(--pink-50); font-family: inherit; outline: none;
+        }
+        .switch { position: relative; width: 52px; height: 30px; flex-shrink: 0; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; inset: 0; background: #e5e7eb; border-radius: 30px; transition: .25s; cursor: pointer; }
+        .slider::before { content: ''; position: absolute; width: 24px; height: 24px; right: 3px; top: 3px; background: white; border-radius: 50%; transition: .25s; box-shadow: 0 2px 5px rgba(0,0,0,0.15); }
+        .switch input:checked + .slider { background: var(--pink-600); }
+        .switch input:checked + .slider::before { transform: translateX(-22px); }
+        .btn-danger { width: 100%; margin-top: 14px; padding: 13px; border-radius: 16px; border: 1.5px solid rgba(225,29,72,0.25); background: white; color: var(--pink-600); font-size: 14px; font-weight: 800; cursor: pointer; }
+        .btn-danger.armed { background: var(--pink-600); color: white; }
+
+        /* --- Toast --- */
+        #toast {
+            position: fixed; left: 50%; bottom: calc(var(--safe-area-bottom) + 20px); z-index: 10000;
+            transform: translate(-50%, 150%); background: var(--obsidian); color: white; border-radius: 16px;
+            padding: 12px 16px; font-size: 14px; font-weight: 800; display: flex; align-items: center; gap: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.25); transition: transform .35s cubic-bezier(0.16, 1, 0.3, 1); max-width: calc(100vw - 40px);
+        }
+        #toast.show { transform: translate(-50%, 0); }
+        #toast button { background: none; border: none; color: var(--gold-light); font-weight: 900; font-size: 14px; cursor: pointer; padding: 0; white-space: nowrap; }
+
+        /* --- Splash --- */
         #splashScreen {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background: rgba(255,255,255,0.98); backdrop-filter: blur(20px);
+            position: fixed; inset: 0;
+            background: rgba(255,255,255,0.98);
             z-index: 9999; display: flex; flex-direction: column;
             justify-content: center; align-items: center;
-            transition: opacity 0.6s ease, visibility 0.6s;
+            transition: opacity 0.5s ease;
         }
-        .biometric-icon { font-size: 80px; color: var(--pink-600); margin-bottom: 20px; animation: pulseScan 1.5s infinite alternate; }
+        .biometric-icon { font-size: 80px; color: var(--pink-600); margin-bottom: 20px; animation: pulseScan 1.2s infinite alternate; }
+        @keyframes pulseScan { from { transform: scale(0.95); opacity: .7; } to { transform: scale(1.05); opacity: 1; } }
         .splash-text { font-size: 20px; font-weight: 800; color: var(--pink-900); }
-        .splash-sub { font-size: 14px; color: var(--gold); margin-top: 8px; font-weight: 700; }
-        
-        @keyframes slideUpFade { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        .splash-sub { font-size: 14px; color: var(--gold-dark); margin-top: 8px; font-weight: 700; }
+
+        @keyframes slideUpFade { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { animation: none !important; transition: none !important; }
+        }
     </style>
 </head>
 <body>
 
-<!-- Animated Backgrounds -->
 <div class="aurora-bg"></div>
 <canvas id="particles-canvas"></canvas>
 
-<!-- Security Splash Screen -->
+<!-- Splash -->
 <div id="splashScreen">
     <i class="ph-fill ph-face-id biometric-icon"></i>
     <div class="splash-text">يُرجى الانتظار</div>
@@ -237,12 +336,14 @@
 <!-- Header -->
 <header class="app-header">
     <div class="header-title"><i class="ph-fill ph-diamond" style="color:var(--pink-600)"></i> SOHA VIP</div>
-    <div class="header-date" id="headerDate"></div>
+    <div class="header-left">
+        <div class="header-date" id="headerDate"></div>
+        <button class="icon-btn" onclick="openSettings()" aria-label="الإعدادات"><i class="ph-bold ph-gear-six"></i></button>
+    </div>
 </header>
 
-<div class="app-content" id="mainApp">
-    
-    <!-- Live Dynamic Greeting Badge -->
+<main class="app-content" id="mainApp">
+
     <div style="text-align: center;">
         <div class="welcome-badge">
             <i class="ph-fill ph-sparkle"></i>
@@ -250,11 +351,10 @@
         </div>
     </div>
 
-    <!-- Live Countdown Banner -->
-    <div class="live-countdown-wrapper">
-        <div class="countdown-title">
-            <div class="live-dot"></div>
-            الوقت المتبقي لموعد الإيداع القادم
+    <!-- Countdown -->
+    <section class="live-countdown-wrapper">
+        <div class="countdown-title" id="countdownTitle">
+            <div class="live-dot"></div> الوقت المتبقي لموعد الإيداع القادم
         </div>
         <div class="time-blocks">
             <div class="time-block"><div class="time-val" id="cd-days">00</div><div class="time-lbl">أيام</div></div>
@@ -262,25 +362,30 @@
             <div class="time-block"><div class="time-val" id="cd-minutes">00</div><div class="time-lbl">دقائق</div></div>
             <div class="time-block"><div class="time-val seconds-val" id="cd-seconds">00</div><div class="time-lbl">ثواني</div></div>
         </div>
+        <div class="deposit-date-line" id="depositDateLine"></div>
         <div id="saturdayNote" class="saturday-note"></div>
-    </div>
+    </section>
 
-    <!-- Input Card -->
-    <div class="glass-card">
+    <!-- Balance -->
+    <section class="glass-card">
         <div class="input-wrapper">
-            <label class="input-label">الرصيد المالي الحالي المُتاح 🌸</label>
-            <i class="ph ph-currency-circle-dollar currency-symbol"></i>
-            <input type="number" id="balanceInput" placeholder="0" inputmode="decimal" oninput="debounceProcess()">
+            <label class="input-label" for="balanceInput">الرصيد المالي الحالي المُتاح 🌸</label>
+            <div class="balance-row">
+                <span class="currency-symbol">₪</span>
+                <input type="number" id="balanceInput" placeholder="0" inputmode="decimal" min="0" step="any" autocomplete="off">
+            </div>
+            <div class="input-hint" id="balanceHint">اكتبي الرصيد اللي بحسابك هلأ</div>
         </div>
-        
-        <div class="quick-actions">
-            <button class="quick-btn" onclick="adjustBalance(-50)">- 50 ₪</button>
-            <button class="quick-btn" onclick="adjustBalance(-100)">- 100 ₪</button>
-            <button class="quick-btn" onclick="adjustBalance(100)">+ 100 ₪</button>
-        </div>
-    </div>
 
-    <!-- Dashboard & VIP Card -->
+        <div class="quick-actions">
+            <button class="quick-btn" onclick="quickSpend(50)">- 50 ₪</button>
+            <button class="quick-btn" onclick="quickSpend(100)">- 100 ₪</button>
+            <button class="quick-btn plus" onclick="addIncome(100)">+ 100 ₪</button>
+        </div>
+        <div class="quick-caption">الخصم بينسجّل كمصروف اليوم • الزيادة بتنضاف للرصيد</div>
+    </section>
+
+    <!-- Dashboard -->
     <div id="dashboard">
         <div class="vip-card-wrapper" id="captureArea">
             <div class="vip-card">
@@ -292,9 +397,24 @@
                 </div>
                 <div class="card-body">
                     <div class="card-label">الحد اليومي المسموح به للإنفاق</div>
-                    <div class="card-amount"><span id="dailyAmountCard">0</span> <span style="font-size: 24px;">₪</span></div>
+                    <div class="card-amount"><span id="dailyAmountCard">0</span> <span class="cur">₪</span></div>
                     <div class="financial-status" id="healthStatus">جاري التحليل...</div>
                 </div>
+
+                <div class="card-progress">
+                    <div class="card-progress-top">
+                        <span>صرفتي اليوم: <b id="spentTodayCard">0</b> ₪</span>
+                        <span id="leftTodayLabel">باقي: <b id="leftTodayCard">0</b> ₪</span>
+                    </div>
+                    <div class="bar"><div class="bar-fill" id="todayBar"></div></div>
+                </div>
+
+                <div class="card-stats">
+                    <div class="card-stat"><div class="v" id="statBalance">0</div><div class="l">الرصيد ₪</div></div>
+                    <div class="card-stat"><div class="v" id="statDays">0</div><div class="l">يوم للإيداع</div></div>
+                    <div class="card-stat"><div class="v" id="statSaved">0</div><div class="l">وفّرتي اليوم ₪</div></div>
+                </div>
+
                 <div class="card-footer">
                     <span id="cardMessage">الرصيد محمي لغاية يوم الإيداع 💎</span>
                     <span id="cardDate"></span>
@@ -302,299 +422,594 @@
             </div>
         </div>
 
-        <button class="btn-export" onclick="generateAutoSaveImage()">
+        <button class="btn-export" id="exportBtn" onclick="generateAutoSaveImage()">
             <i class="ph-bold ph-image"></i>
             إنشاء البطاقة لحفظها بالصور
         </button>
-    </div>
-</div>
 
-<!-- Footer -->
+        <!-- Add expense -->
+        <section class="glass-card">
+            <h3 class="section-title"><i class="ph-fill ph-receipt"></i> سجّلي مصروف</h3>
+            <div class="expense-row">
+                <input type="number" class="expense-amount" id="expAmount" placeholder="المبلغ ₪" inputmode="decimal" min="0" step="any">
+                <button class="btn-primary btn-add" onclick="submitExpense()"><i class="ph-bold ph-plus"></i> أضيفي</button>
+            </div>
+            <input type="text" class="expense-note" id="expNote" placeholder="ملاحظة (اختياري) مثلاً: قهوة الصبح ☕" maxlength="40">
+            <div class="chips" id="catChips"></div>
+        </section>
+
+        <!-- Today list -->
+        <section class="glass-card">
+            <h3 class="section-title">
+                <i class="ph-fill ph-list-checks"></i> مصاريف اليوم
+                <span class="spacer"></span>
+                <small id="todayCount"></small>
+            </h3>
+            <div class="exp-list" id="todayList"></div>
+            <div class="tomorrow-tip" id="tomorrowTip"></div>
+        </section>
+    </div>
+</main>
+
 <footer class="app-footer">
     صُمم وطُور بحب لسهى 🌸<br>
     <span style="font-size: 10px; opacity: 0.7;">بواسطة أبو جواهر &copy; 2026</span>
 </footer>
 
-<!-- Image Modal for iOS Native Saving -->
+<!-- Image Modal -->
 <div id="imageModal">
-    <button class="close-modal" onclick="closeModal()"><i class="ph-bold ph-x"></i></button>
+    <button class="close-modal" onclick="closeModal()" aria-label="إغلاق"><i class="ph-bold ph-x"></i></button>
     <img id="finalSavedImage" src="" alt="VIP Card">
+    <button class="btn-primary modal-share" id="modalShareBtn" onclick="shareImage()">
+        <i class="ph-bold ph-share-network"></i> حفظ / مشاركة الصورة
+    </button>
     <div class="modal-instruction">
-        <i class="ph-fill ph-hand-tap" style="font-size: 32px; color: var(--gold);"></i>
-        <span>اضغطي مطولاً على البطاقة<br>واختاري "حفظ في الصور" (Save to Photos)</span>
+        <i class="ph-fill ph-hand-tap" style="font-size: 30px; color: var(--gold);"></i>
+        <span>أو اضغطي مطولاً على البطاقة<br>واختاري "حفظ في الصور" (Save to Photos)</span>
     </div>
 </div>
 
+<!-- Settings -->
+<div id="sheetBackdrop" onclick="closeSettings()"></div>
+<div id="settingsSheet" role="dialog" aria-label="الإعدادات">
+    <div class="sheet-handle"></div>
+    <h3 class="section-title"><i class="ph-fill ph-gear-six"></i> الإعدادات</h3>
+
+    <div class="setting-row">
+        <div class="setting-text"><b>يوم الإيداع بالشهر</b><span>اليوم اللي بينزل فيه الراتب</span></div>
+        <select id="paydaySelect" onchange="changePayday(this.value)"></select>
+    </div>
+    <div class="setting-row">
+        <div class="setting-text"><b>احسبي لغاية الجمعة</b><span>إذا صادف الإيداع يوم سبت، بينحسب الحد اليومي لغاية الجمعة قبله</span></div>
+        <label class="switch"><input type="checkbox" id="earlyFridayToggle" onchange="changeEarlyFriday(this.checked)"><span class="slider"></span></label>
+    </div>
+
+    <button class="btn-danger" id="resetBtn" onclick="resetAll()"><i class="ph-bold ph-trash"></i> مسح كل البيانات</button>
+</div>
+
+<div id="toast"><span id="toastText"></span><button id="toastAction" style="display:none"></button></div>
+
 <script>
-    // منع الحروف والرموز الخاطئة في خانة الإدخال
-    document.getElementById("balanceInput").addEventListener("keydown", function(e) {
-        if (["e", "E", "+", "-"].includes(e.key)) e.preventDefault();
-    });
+    /* ================= State ================= */
+    const KEY = 'soha_v2';
+    const DAY = 864e5;
+    const CATS = [
+        { k: 'food', l: 'أكل', i: 'ph-fork-knife' },
+        { k: 'coffee', l: 'قهوة', i: 'ph-coffee' },
+        { k: 'transport', l: 'مواصلات', i: 'ph-bus' },
+        { k: 'shop', l: 'تسوّق', i: 'ph-shopping-bag' },
+        { k: 'home', l: 'بيت', i: 'ph-house' },
+        { k: 'gift', l: 'هدايا', i: 'ph-gift' },
+        { k: 'other', l: 'غيره', i: 'ph-dots-three-circle' }
+    ];
+    const QUICK = { k: 'quick', l: 'خصم سريع', i: 'ph-lightning' };
+    let selectedCat = 'food';
 
-    /* --- Particles Effect --- */
-    const canvas = document.getElementById('particles-canvas');
-    const ctx = canvas.getContext('2d');
-    canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-    const particles = [];
-    for (let i = 0; i < 20; i++) {
-        particles.push({
-            x: Math.random() * canvas.width, y: Math.random() * canvas.height,
-            radius: Math.random() * 2, vx: (Math.random() - 0.5) * 0.4, vy: (Math.random() - 0.5) * 0.4, alpha: Math.random() * 0.6 + 0.2
-        });
+    function defaults() { return { balance: null, payday: 9, earlyFriday: false, log: [], snap: null }; }
+
+    function load() {
+        try {
+            const raw = localStorage.getItem(KEY);
+            if (raw) return Object.assign(defaults(), JSON.parse(raw));
+        } catch (e) {}
+        const d = defaults();
+        // ترحيل الرصيد من النسخة القديمة
+        try {
+            const old = parseFloat(localStorage.getItem('soha_fluid_balance'));
+            if (!isNaN(old) && old > 0) d.balance = old;
+        } catch (e) {}
+        return d;
     }
-    function animateParticles() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        particles.forEach(p => {
-            p.x += p.vx; p.y += p.vy;
-            if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
-            if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
-            ctx.beginPath(); ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-            ctx.fillStyle = `rgba(212, 175, 55, ${p.alpha})`; ctx.fill();
-        });
-        requestAnimationFrame(animateParticles);
-    }
-    animateParticles();
+    let S = load();
+    function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
 
-    /* --- Dynamic Greeting Logic --- */
-    function updateGreeting() {
-        const hour = new Date().getHours();
-        let greetingText = "طابت أوقاتكِ";
-        if (hour >= 5 && hour < 12) greetingText = "صباح الخير";
-        else if (hour >= 12 && hour < 18) greetingText = "مساء الخير";
-        else greetingText = "طابت ليلتكِ";
-        document.getElementById('greetingText').innerText = greetingText;
-    }
+    /* ================= Helpers ================= */
+    const $ = id => document.getElementById(id);
+    const pad = n => String(n).padStart(2, '0');
+    const dk = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+    const startOfDay = d => new Date(d.getFullYear(), d.getMonth(), d.getDate());
+    const round2 = n => Math.round(n * 100) / 100;
+    const fmt = n => Number(n || 0).toLocaleString('en-US', { maximumFractionDigits: 2 });
+    const vibrate = ms => { try { navigator.vibrate && navigator.vibrate(ms); } catch (e) {} };
+    const catOf = k => CATS.find(c => c.k === k) || (k === 'quick' ? QUICK : CATS[CATS.length - 1]);
+    const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
-    /* --- Payday Logic & Countdown --- */
-    function getNextPayday(now) {
-        let targetYear = now.getFullYear();
-        let targetMonth = now.getMonth();
-        if (now.getDate() >= 9) {
-            targetMonth++;
-            if (targetMonth > 11) { targetMonth = 0; targetYear++; }
-        }
-        return new Date(targetYear, targetMonth, 9, 0, 0, 0);
+    /* ================= Payday logic ================= */
+    function depositFor(y, m) {
+        const dim = new Date(y, m + 1, 0).getDate();
+        const official = new Date(y, m, Math.min(S.payday, dim));
+        const eff = new Date(official);
+        if (S.earlyFriday && official.getDay() === 6) eff.setDate(eff.getDate() - 1);
+        return { official, eff };
     }
 
-    function updateCountdown() {
-        const now = new Date();
-        const target = getNextPayday(now);
-        const satNote = document.getElementById('saturdayNote');
-        const isTargetSaturday = target.getDay() === 6;
-
-        if (now.getDate() === 9) {
-            document.getElementById('cd-days').innerText = "00"; document.getElementById('cd-hours').innerText = "00";
-            document.getElementById('cd-minutes').innerText = "00"; document.getElementById('cd-seconds').innerText = "00";
-            document.querySelector('.countdown-title').innerHTML = "<i class='ph-fill ph-confetti' style='color:#4ade80;'></i> اليوم هو موعد الإيداع الرسمي! 🎉";
-            satNote.style.display = 'none';
-        } else {
-            document.querySelector('.countdown-title').innerHTML = "<div class='live-dot'></div> الوقت المتبقي لموعد الإيداع القادم";
-            let diffTime = target.getTime() - now.getTime();
-            if (diffTime < 0) diffTime = 0; 
-
-            document.getElementById('cd-days').innerText = Math.floor(diffTime / (1000 * 60 * 60 * 24)).toString().padStart(2, '0');
-            document.getElementById('cd-hours').innerText = Math.floor((diffTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)).toString().padStart(2, '0');
-            document.getElementById('cd-minutes').innerText = Math.floor((diffTime % (1000 * 60 * 60)) / (1000 * 60)).toString().padStart(2, '0');
-            document.getElementById('cd-seconds').innerText = Math.floor((diffTime % (1000 * 60)) / 1000).toString().padStart(2, '0');
-            
-            if (isTargetSaturday) {
-                satNote.style.display = 'block';
-                if (now.getDate() === 8) {
-                    satNote.style.color = "#e11d48"; satNote.style.borderColor = "rgba(225, 29, 72, 0.3)";
-                    satNote.innerHTML = "<i class='ph-fill ph-warning-circle'></i> غداً السبت هو موعد الإيداع الرسمي، لذا يُحتمل جداً إيداع الراتب اليوم الجمعة!";
-                } else {
-                    satNote.style.color = "#b48608"; satNote.style.borderColor = "rgba(212, 175, 55, 0.3)";
-                    satNote.innerHTML = "<i class='ph-fill ph-info'></i> ملاحظة: يُصادف الإيداع القادم يوم السبت، لذا يُحتمل إيداعه يوم الجمعة (8 الشهر).";
-                }
-            } else {
-                satNote.style.display = 'none';
+    // موعد الإيداع القادم (بعد اليوم) + هل اليوم يوم إيداع
+    function getCycle(now = new Date()) {
+        const t0 = startOfDay(now).getTime();
+        let isToday = false;
+        for (let i = -1; i < 3; i++) {
+            const base = new Date(now.getFullYear(), now.getMonth() + i, 1);
+            const c = depositFor(base.getFullYear(), base.getMonth());
+            if (c.eff.getTime() === t0) isToday = true;
+            if (c.eff.getTime() > t0) {
+                return { ...c, isToday, daysLeft: Math.max(1, Math.round((c.eff.getTime() - t0) / DAY)) };
             }
         }
     }
 
-    /* --- App Init --- */
-    window.addEventListener('load', () => {
-        // تحديث التحية والتاريخ
-        updateGreeting();
-        setInterval(updateGreeting, 60000); // تحديث التحية كل دقيقة
-        
-        const today = new Date();
-        document.getElementById('headerDate').innerText = today.toLocaleDateString('ar-EG', { weekday: 'long', month: 'long', day: 'numeric' });
-        document.getElementById('cardDate').innerText = today.toLocaleDateString('ar-EG');
-        
-        // تشغيل العداد
-        updateCountdown();
-        setInterval(updateCountdown, 1000);
-
-        // إخفاء شاشة البداية
-        setTimeout(() => {
-            const splash = document.getElementById('splashScreen');
-            const mainApp = document.getElementById('mainApp');
-            splash.style.opacity = '0';
-            setTimeout(() => {
-                splash.style.display = 'none';
-                mainApp.style.opacity = '1';
-                mainApp.style.transform = 'translateY(0)';
-            }, 600);
-        }, 1500);
-
-        // استرجاع الرصيد السابق
-        const saved = localStorage.getItem('soha_fluid_balance');
-        if (saved) {
-            document.getElementById('balanceInput').value = saved;
-            processData(false); // إظهار البطاقة فوراً وبدون اهتزاز
+    /* ================= Daily snapshot ================= */
+    function ensureSnap() {
+        if (S.balance == null) return;
+        const k = dk(new Date());
+        if (!S.snap || S.snap.date !== k) {
+            S.snap = { date: k, start: S.balance };
+            pruneLog();
+            save();
         }
-    });
+    }
+    function pruneLog() {
+        const limit = Date.now() - 60 * DAY;
+        S.log = S.log.filter(e => e.ts >= limit);
+    }
+    const todayItems = () => { const k = dk(new Date()); return S.log.filter(e => e.date === k); };
+    const spentToday = () => round2(todayItems().reduce((a, e) => a + e.amount, 0));
 
-    let debounceTimer;
-    function debounceProcess() {
-        clearTimeout(debounceTimer);
-        let val = document.getElementById('balanceInput').value;
-        if(val === "" || val < 0) {
-            document.getElementById('dashboard').style.display = 'none';
+    /* ================= Actions ================= */
+    function setBalanceFromInput() {
+        const raw = $('balanceInput').value.trim();
+        if (raw === '') return;
+        const v = parseFloat(raw);
+        if (isNaN(v) || v < 0) return;
+        S.balance = round2(v);
+        S.snap = { date: dk(new Date()), start: round2(v + spentToday()) };
+        save();
+        render(true);
+    }
+
+    function addExpense(amount, cat, note) {
+        if (S.balance == null) { toast('اكتبي رصيدك الحالي أول 🌸'); $('balanceInput').focus(); return false; }
+        amount = round2(amount);
+        if (!(amount > 0)) { toast('اكتبي مبلغ صحيح'); return false; }
+        ensureSnap();
+        const now = new Date();
+        const item = { id: now.getTime() + '_' + Math.random().toString(36).slice(2, 7), ts: now.getTime(), date: dk(now), amount, cat, note: note || '' };
+        S.log.unshift(item);
+        S.balance = round2(S.balance - amount);
+        save();
+        vibrate(30);
+        render(false);
+        toast(`انسجّل ${fmt(amount)} ₪`, 'تراجع', () => deleteExpense(item.id, true));
+        return true;
+    }
+
+    function quickSpend(amount) { addExpense(amount, 'quick', ''); }
+
+    function addIncome(amount) {
+        if (S.balance == null) S.balance = 0;
+        ensureSnap();
+        S.balance = round2(S.balance + amount);
+        S.snap.start = round2(S.snap.start + amount);
+        save();
+        vibrate(30);
+        render(false);
+        toast(`انضاف ${fmt(amount)} ₪ للرصيد ✨`, 'تراجع', () => {
+            S.balance = round2(S.balance - amount);
+            S.snap.start = round2(S.snap.start - amount);
+            save(); render(false);
+        });
+    }
+
+    function deleteExpense(id, silent) {
+        const idx = S.log.findIndex(e => e.id === id);
+        if (idx < 0) return;
+        const [e] = S.log.splice(idx, 1);
+        S.balance = round2(S.balance + e.amount);
+        save();
+        render(false);
+        if (!silent) toast(`انحذف ${fmt(e.amount)} ₪ ورجع للرصيد`, 'تراجع', () => {
+            S.log.splice(idx, 0, e);
+            S.balance = round2(S.balance - e.amount);
+            save(); render(false);
+        });
+    }
+
+    function submitExpense() {
+        const amt = parseFloat($('expAmount').value);
+        const note = $('expNote').value.trim();
+        if (addExpense(amt, selectedCat, note)) {
+            $('expAmount').value = '';
+            $('expNote').value = '';
+            $('expAmount').blur(); $('expNote').blur();
+        }
+    }
+
+    /* ================= Render ================= */
+    let lastDaily = null;
+    function render(animate) {
+        ensureSnap();
+        const has = S.balance != null;
+        const input = $('balanceInput');
+        if (document.activeElement !== input) input.value = has ? S.balance : '';
+        $('dashboard').style.display = has ? 'flex' : 'none';
+        if (!has) return;
+
+        const cyc = getCycle();
+        const days = cyc.daysLeft;
+        const daily = Math.max(0, Math.floor(S.snap.start / days));
+        const spent = spentToday();
+        const left = round2(daily - spent);
+
+        // Card amount
+        const amtEl = $('dailyAmountCard');
+        if (animate && lastDaily !== daily && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            const from = lastDaily || 0; let t0 = null;
+            const step = ts => {
+                if (!t0) t0 = ts;
+                const p = Math.min((ts - t0) / 500, 1);
+                amtEl.textContent = Math.floor(from + (daily - from) * p).toLocaleString('en-US');
+                if (p < 1) requestAnimationFrame(step);
+            };
+            requestAnimationFrame(step);
+        } else {
+            amtEl.textContent = daily.toLocaleString('en-US');
+        }
+        lastDaily = daily;
+
+        // Status
+        const statusEl = $('healthStatus'), msg = $('cardMessage');
+        let st;
+        if (S.balance <= 0) st = ['ph-siren', 'الرصيد خلص (حالة طوارئ)', '#f87171', 'اقتصري عالأساسيات بس لتعدي هالأيام 💎'];
+        else if (daily >= 150) st = ['ph-star', 'الوضع ممتاز جداً والخير كتير', '#4ade80', 'عيشي برفاهية ودللي حالك 💎'];
+        else if (daily >= 80) st = ['ph-check-circle', 'الوضع جيد ومُريح', '#a3e635', 'أمورك تمام وميزانيتك بتكفي 💎'];
+        else if (daily >= 40) st = ['ph-warning-circle', 'الوضع مستقر (امسكي إيدك شوي)', '#f3e5ab', 'بتقدري تمشي أمورك بس بحذر 💎'];
+        else st = ['ph-siren', 'الوضع مضغوط جداً (حالة طوارئ)', '#f87171', 'اقتصري عالأساسيات بس لتعدي هالأيام 💎'];
+        if (left < 0 && S.balance > 0) msg.textContent = 'تعدّيتي حد اليوم، بكرة بنضبطها 💪';
+        else msg.textContent = st[3];
+        statusEl.innerHTML = `<i class="ph-fill ${st[0]}"></i> ${st[1]}`;
+        statusEl.style.color = st[2];
+        statusEl.style.borderColor = st[2] + '55';
+
+        // Progress
+        $('spentTodayCard').textContent = fmt(spent);
+        if (left >= 0) $('leftTodayLabel').innerHTML = `باقي: <b>${fmt(left)}</b> ₪`;
+        else $('leftTodayLabel').innerHTML = `زيادة: <b style="color:#f87171">${fmt(-left)}</b> ₪`;
+        const pct = daily > 0 ? Math.min(100, (spent / daily) * 100) : (spent > 0 ? 100 : 0);
+        const bar = $('todayBar');
+        bar.style.width = pct + '%';
+        bar.classList.toggle('over', left < 0);
+
+        // Stats
+        $('statBalance').textContent = fmt(Math.round(S.balance));
+        $('statDays').textContent = days;
+        $('statSaved').textContent = fmt(Math.max(0, Math.round(left)));
+        $('cardDate').textContent = new Date().toLocaleDateString('ar-EG');
+
+        // Hint
+        $('balanceHint').textContent = `بيتقسّم على ${days} ${days === 1 ? 'يوم' : (days <= 10 ? 'أيام' : 'يوم')} لغاية الإيداع`;
+
+        renderTodayList(days);
+    }
+
+    function renderTodayList(days) {
+        const items = todayItems();
+        const list = $('todayList');
+        $('todayCount').textContent = items.length ? `${items.length} • ${fmt(spentToday())} ₪` : '';
+        if (!items.length) {
+            list.innerHTML = '<div class="empty-state">ما في مصاريف لليوم لسّا 🌷</div>';
+        } else {
+            list.innerHTML = items.map(e => {
+                const c = catOf(e.cat);
+                const time = new Date(e.ts).toLocaleTimeString('ar-EG', { hour: 'numeric', minute: '2-digit' });
+                return `<div class="exp-item">
+                    <div class="exp-icon"><i class="ph-fill ${c.i}"></i></div>
+                    <div class="exp-info">
+                        <div class="exp-name">${esc(e.note || c.l)}</div>
+                        <div class="exp-time">${e.note ? c.l + ' • ' : ''}${time}</div>
+                    </div>
+                    <div class="exp-amt">- ${fmt(e.amount)} ₪</div>
+                    <button class="exp-del" onclick="deleteExpense('${e.id}')" aria-label="حذف"><i class="ph-bold ph-x-circle"></i></button>
+                </div>`;
+            }).join('');
+        }
+
+        const tip = $('tomorrowTip');
+        if (days > 1) {
+            const tmr = Math.max(0, Math.floor(S.balance / (days - 1)));
+            tip.innerHTML = `<i class="ph-fill ph-lightbulb"></i> إذا وقفتي هون اليوم، حدّك اليومي من بكرة رح يكون <b>${fmt(tmr)} ₪</b>`;
+            tip.style.display = 'block';
+        } else {
+            tip.innerHTML = `<i class="ph-fill ph-confetti"></i> بكرة يوم الإيداع! باقي معك <b>${fmt(S.balance)} ₪</b>`;
+            tip.style.display = 'block';
+        }
+    }
+
+    function renderChips() {
+        $('catChips').innerHTML = CATS.map(c =>
+            `<button class="chip ${c.k === selectedCat ? 'active' : ''}" onclick="selectCat('${c.k}')"><i class="ph-fill ${c.i}"></i>${c.l}</button>`
+        ).join('');
+    }
+    function selectCat(k) { selectedCat = k; renderChips(); vibrate(10); }
+
+    /* ================= Countdown ================= */
+    let lastTitleState = null;
+    function updateCountdown() {
+        const now = new Date();
+        const cyc = getCycle(now);
+        const title = $('countdownTitle');
+        const satNote = $('saturdayNote');
+        const state = cyc.isToday ? 'today' : 'count';
+
+        if (state !== lastTitleState) {
+            title.innerHTML = cyc.isToday
+                ? "<i class='ph-fill ph-confetti' style='color:#16a34a;'></i> اليوم هو موعد الإيداع! 🎉"
+                : "<div class='live-dot'></div> الوقت المتبقي لموعد الإيداع القادم";
+            lastTitleState = state;
+        }
+
+        const diff = Math.max(0, cyc.eff.getTime() - now.getTime());
+        $('cd-days').textContent = pad(Math.floor(diff / DAY));
+        $('cd-hours').textContent = pad(Math.floor((diff % DAY) / 36e5));
+        $('cd-minutes').textContent = pad(Math.floor((diff % 36e5) / 6e4));
+        $('cd-seconds').textContent = pad(Math.floor((diff % 6e4) / 1000));
+
+        $('depositDateLine').textContent = 'الإيداع القادم: ' + cyc.eff.toLocaleDateString('ar-EG', { weekday: 'long', day: 'numeric', month: 'long' });
+
+        const officialSat = cyc.official.getDay() === 6;
+        if (officialSat && !S.earlyFriday) {
+            const fri = new Date(cyc.official); fri.setDate(fri.getDate() - 1);
+            satNote.style.display = 'block';
+            if (dk(now) === dk(fri)) {
+                satNote.classList.add('urgent');
+                satNote.innerHTML = "<i class='ph-fill ph-warning-circle'></i> بكرة السبت موعد الإيداع الرسمي، فيُحتمل جداً ينزل الراتب اليوم الجمعة!";
+            } else {
+                satNote.classList.remove('urgent');
+                satNote.innerHTML = `<i class='ph-fill ph-info'></i> الإيداع القادم بيصادف يوم السبت، فيُحتمل ينزل يوم الجمعة (${fri.getDate()} بالشهر). بتقدري تفعّلي "احسبي لغاية الجمعة" من الإعدادات.`;
+            }
+        } else if (officialSat && S.earlyFriday) {
+            satNote.style.display = 'block';
+            satNote.classList.remove('urgent');
+            satNote.innerHTML = "<i class='ph-fill ph-check-circle'></i> الحساب معمول لغاية الجمعة لأنو الإيداع الرسمي يوم سبت.";
+        } else {
+            satNote.style.display = 'none';
+        }
+    }
+
+    /* ================= Greeting & date ================= */
+    let lastDayKey = dk(new Date());
+    function updateGreeting() {
+        const h = new Date().getHours();
+        let g = 'طابت ليلتكِ';
+        if (h >= 5 && h < 12) g = 'صباح الخير';
+        else if (h >= 12 && h < 18) g = 'مساء الخير';
+        $('greetingText').textContent = g;
+        $('headerDate').textContent = new Date().toLocaleDateString('ar-EG', { weekday: 'long', month: 'long', day: 'numeric' });
+        // إذا تغيّر اليوم والموقع مفتوح، نعيد الحساب
+        const k = dk(new Date());
+        if (k !== lastDayKey) { lastDayKey = k; render(true); }
+    }
+
+    /* ================= Settings ================= */
+    function openSettings() {
+        const sel = $('paydaySelect');
+        if (!sel.options.length) for (let i = 1; i <= 31; i++) sel.add(new Option(i, i));
+        sel.value = S.payday;
+        $('earlyFridayToggle').checked = !!S.earlyFriday;
+        $('resetBtn').classList.remove('armed');
+        $('resetBtn').innerHTML = '<i class="ph-bold ph-trash"></i> مسح كل البيانات';
+        const bd = $('sheetBackdrop');
+        bd.style.display = 'block';
+        requestAnimationFrame(() => { bd.style.opacity = '1'; $('settingsSheet').classList.add('open'); });
+    }
+    function closeSettings() {
+        $('settingsSheet').classList.remove('open');
+        const bd = $('sheetBackdrop');
+        bd.style.opacity = '0';
+        setTimeout(() => { bd.style.display = 'none'; }, 250);
+    }
+    function changePayday(v) { S.payday = parseInt(v, 10) || 9; save(); lastTitleState = null; updateCountdown(); render(true); toast(`يوم الإيداع صار ${S.payday} بالشهر`); }
+    function changeEarlyFriday(v) { S.earlyFriday = v; save(); lastTitleState = null; updateCountdown(); render(true); }
+    let resetTimer;
+    function resetAll() {
+        const btn = $('resetBtn');
+        if (!btn.classList.contains('armed')) {
+            btn.classList.add('armed');
+            btn.innerHTML = '<i class="ph-bold ph-warning"></i> متأكدة؟ اضغطي كمان مرة للمسح';
+            clearTimeout(resetTimer);
+            resetTimer = setTimeout(() => { btn.classList.remove('armed'); btn.innerHTML = '<i class="ph-bold ph-trash"></i> مسح كل البيانات'; }, 4000);
             return;
         }
-        document.getElementById('balanceInput').value = Math.abs(val);
-        debounceTimer = setTimeout(() => { processData(false); }, 300);
+        S = defaults();
+        try { localStorage.removeItem('soha_fluid_balance'); } catch (e) {}
+        save(); lastDaily = null;
+        closeSettings();
+        render(false); updateCountdown();
+        toast('انمسحت كل البيانات');
     }
 
-    function adjustBalance(amount) {
-        const input = document.getElementById('balanceInput');
-        let current = parseFloat(input.value) || 0;
-        let newVal = current + amount;
-        if (newVal < 0) newVal = 0;
-        input.value = newVal;
-        if (navigator.vibrate) navigator.vibrate(30);
-        if(newVal === 0) { document.getElementById('dashboard').style.display = 'none'; } 
-        else { processData(false); }
+    /* ================= Toast ================= */
+    let toastTimer;
+    function toast(text, actionLabel, action) {
+        const t = $('toast'), btn = $('toastAction');
+        $('toastText').textContent = text;
+        if (actionLabel) {
+            btn.style.display = 'inline';
+            btn.textContent = actionLabel;
+            btn.onclick = () => { t.classList.remove('show'); action && action(); };
+        } else btn.style.display = 'none';
+        t.classList.add('show');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => t.classList.remove('show'), 3500);
     }
 
-    /* Holographic 3D Tilt */
-    const cardWrapper = document.getElementById('captureArea');
-    const hologram = document.getElementById('hologram');
+    /* ================= 3D Tilt ================= */
+    const cardWrapper = $('captureArea');
+    const hologram = $('hologram');
     function handleMove(x, y, rect) {
-        const centerX = rect.width / 2; const centerY = rect.height / 2;
-        const rotateX = ((y - centerY) / centerY) * -8; const rotateY = ((x - centerX) / centerX) * 8;
-        cardWrapper.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
-        const percentX = (x / rect.width) * 100; const percentY = (y / rect.height) * 100;
-        hologram.style.background = `radial-gradient(circle at ${percentX}% ${percentY}%, rgba(255,255,255,0.3) 0%, transparent 60%)`;
+        const cx = rect.width / 2, cy = rect.height / 2;
+        const rx = ((y - cy) / cy) * -8, ry = ((x - cx) / cx) * 8;
+        cardWrapper.style.transform = `perspective(1000px) rotateX(${rx}deg) rotateY(${ry}deg) scale3d(1.02, 1.02, 1.02)`;
+        hologram.style.background = `radial-gradient(circle at ${(x / rect.width) * 100}% ${(y / rect.height) * 100}%, rgba(255,255,255,0.3) 0%, transparent 60%)`;
     }
-    cardWrapper.addEventListener('mousemove', (e) => { const rect = cardWrapper.getBoundingClientRect(); handleMove(e.clientX - rect.left, e.clientY - rect.top, rect); });
-    cardWrapper.addEventListener('touchmove', (e) => { const touch = e.touches[0]; const rect = cardWrapper.getBoundingClientRect(); handleMove(touch.clientX - rect.left, touch.clientY - rect.top, rect); }, {passive: true});
+    cardWrapper.addEventListener('mousemove', e => { const r = cardWrapper.getBoundingClientRect(); handleMove(e.clientX - r.left, e.clientY - r.top, r); });
+    cardWrapper.addEventListener('touchmove', e => { const t = e.touches[0]; const r = cardWrapper.getBoundingClientRect(); handleMove(t.clientX - r.left, t.clientY - r.top, r); }, { passive: true });
     const resetTransform = () => {
-        cardWrapper.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
-        hologram.style.background = `radial-gradient(circle at 50% 50%, rgba(255,255,255,0.15) 0%, transparent 60%)`;
+        cardWrapper.style.transform = '';
+        hologram.style.background = '';
     };
     cardWrapper.addEventListener('mouseleave', resetTransform);
     cardWrapper.addEventListener('touchend', resetTransform);
 
-    function processData(animate = true) {
-        const balance = parseFloat(document.getElementById('balanceInput').value);
-        if (isNaN(balance) || balance <= 0) return;
-
-        localStorage.setItem('soha_fluid_balance', balance);
-
-        const now = new Date();
-        const target = getNextPayday(now);
-        let diffTime = target.getTime() - now.getTime();
-        let diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-        
-        if (diffDays <= 0) diffDays = 1; 
-
-        const daily = Math.floor(balance / diffDays);
-        
-        const statusEl = document.getElementById('healthStatus');
-        const cardMessage = document.getElementById('cardMessage');
-
-        if (daily >= 150) {
-            statusEl.innerHTML = "<i class='ph-fill ph-star'></i> الوضع ممتاز جداً والخير كتير";
-            statusEl.style.color = "#4ade80"; statusEl.style.borderColor = "rgba(74, 222, 128, 0.3)";
-            cardMessage.innerText = "عيشي برفاهية ودللي حالك 💎";
-        } else if (daily >= 80) {
-            statusEl.innerHTML = "<i class='ph-fill ph-check-circle'></i> الوضع جيد ومُريح";
-            statusEl.style.color = "#a3e635"; statusEl.style.borderColor = "rgba(163, 230, 53, 0.3)";
-            cardMessage.innerText = "أمورك تمام وميزانيتك بتكفي 💎";
-        } else if (daily >= 40) {
-            statusEl.innerHTML = "<i class='ph-fill ph-warning-circle'></i> الوضع مستقر (امسكي إيدك شوي)";
-            statusEl.style.color = "var(--gold-light)"; statusEl.style.borderColor = "rgba(212, 175, 55, 0.3)";
-            cardMessage.innerText = "بتقدري تمشي أمورك بس بحذر 💎";
-        } else {
-            statusEl.innerHTML = "<i class='ph-fill ph-siren'></i> الوضع مضغوط جداً (حالة طوارئ)";
-            statusEl.style.color = "#f87171"; statusEl.style.borderColor = "rgba(248, 113, 113, 0.3)";
-            cardMessage.innerText = "اقتصري عالأساسيات بس لتعدي هالأيام 💎";
-        }
-
-        document.getElementById('dashboard').style.display = 'block';
-        
-        if(animate) {
-            let obj = document.getElementById('dailyAmountCard');
-            let startTimestamp = null;
-            const step = (timestamp) => {
-                if (!startTimestamp) startTimestamp = timestamp;
-                const progress = Math.min((timestamp - startTimestamp) / 500, 1);
-                obj.innerHTML = Math.floor(progress * daily).toLocaleString('en-US');
-                if (progress < 1) window.requestAnimationFrame(step);
-            };
-            window.requestAnimationFrame(step);
-        } else {
-            document.getElementById('dailyAmountCard').innerHTML = daily.toLocaleString('en-US');
-        }
-    }
-
-    /* --- iOS Auto-Save Fix (Crash Prevention) --- */
+    /* ================= Image export ================= */
+    let currentBlob = null;
     function generateAutoSaveImage() {
-        const area = document.getElementById('captureArea');
-        const btn = document.querySelector('.btn-export');
-        const modal = document.getElementById('imageModal');
-        const finalImg = document.getElementById('finalSavedImage');
-        
-        // إجبار المتصفح على تسطيح العنصر بالكامل لمنع التعليق (Crash)
-        area.classList.add('flatten-for-capture');
+        if (typeof html2canvas === 'undefined') { toast('مكتبة الصور ما تحمّلت، تأكدي من الإنترنت وجربي كمان مرة'); return; }
+        const btn = $('exportBtn');
+        resetTransform();
+        cardWrapper.classList.add('flatten-for-capture');
         hologram.style.display = 'none';
-        
         btn.innerHTML = '<i class="ph-bold ph-spinner-gap ph-spin"></i> جاري تجهيز البطاقة...';
         btn.disabled = true;
-        
-        // إعطاء وقت للمتصفح لتطبيق التسوية قبل الالتقاط
-        setTimeout(() => {
-            html2canvas(area, { 
-                backgroundColor: null, 
-                scale: 3, // دقة ممتازة لآيفون برو ماكس
-                useCORS: true, 
-                logging: false
-            }).then(canvas => {
-                const imgData = canvas.toDataURL("image/png");
-                finalImg.src = imgData;
-                
-                modal.style.display = 'flex';
-                setTimeout(() => { 
-                    modal.style.opacity = '1'; 
-                    finalImg.style.transform = 'scale(1)';
-                }, 50);
 
-                // استرجاع الـ 3D بعد الصورة
-                area.classList.remove('flatten-for-capture');
-                hologram.style.display = 'block'; 
-                btn.innerHTML = '<i class="ph-bold ph-image"></i> إنشاء البطاقة لحفظها بالصور';
-                btn.disabled = false;
-            }).catch(error => {
-                console.error("خطأ في حفظ الصورة:", error);
-                alert("صار تعليق بسيط، جربي كمان مرة!");
-                area.classList.remove('flatten-for-capture');
-                hologram.style.display = 'block'; 
-                btn.innerHTML = '<i class="ph-bold ph-image"></i> إنشاء البطاقة لحفظها بالصور';
-                btn.disabled = false;
+        const restore = () => {
+            cardWrapper.classList.remove('flatten-for-capture');
+            hologram.style.display = '';
+            btn.innerHTML = '<i class="ph-bold ph-image"></i> إنشاء البطاقة لحفظها بالصور';
+            btn.disabled = false;
+        };
+
+        const go = () => html2canvas(cardWrapper, { backgroundColor: null, scale: Math.min(3, (window.devicePixelRatio || 2) + 1), useCORS: true, logging: false })
+            .then(canvas => {
+                $('finalSavedImage').src = canvas.toDataURL('image/png');
+                currentBlob = null;
+                canvas.toBlob(b => { currentBlob = b; updateShareBtn(); }, 'image/png');
+                openModal();
+                restore();
+            })
+            .catch(err => {
+                console.error('خطأ في حفظ الصورة:', err);
+                toast('صار تعليق بسيط، جربي كمان مرة!');
+                restore();
             });
-        }, 300); 
+
+        // نستنى الخطوط تكون جاهزة ونعطي وقت لتطبيق التسطيح
+        const fontsReady = document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve();
+        fontsReady.then(() => setTimeout(go, 250));
     }
 
-    function closeModal() {
-        const modal = document.getElementById('imageModal');
-        const finalImg = document.getElementById('finalSavedImage');
-        modal.style.opacity = '0';
-        finalImg.style.transform = 'scale(0.9)';
-        setTimeout(() => { modal.style.display = 'none'; }, 300);
+    function canShareFiles() {
+        try {
+            const f = new File([new Blob(['x'], { type: 'image/png' })], 'a.png', { type: 'image/png' });
+            return !!(navigator.canShare && navigator.canShare({ files: [f] }));
+        } catch (e) { return false; }
     }
+    function updateShareBtn() { $('modalShareBtn').style.display = (currentBlob && canShareFiles()) ? 'flex' : 'none'; }
+
+    function shareImage() {
+        if (!currentBlob) return;
+        const file = new File([currentBlob], `soha-card-${dk(new Date())}.png`, { type: 'image/png' });
+        navigator.share({ files: [file], title: 'بطاقة سهى الماسية' }).catch(() => {});
+    }
+
+    function openModal() {
+        const m = $('imageModal');
+        m.style.display = 'flex';
+        updateShareBtn();
+        setTimeout(() => { m.style.opacity = '1'; $('finalSavedImage').style.transform = 'scale(1)'; }, 30);
+    }
+    function closeModal() {
+        const m = $('imageModal');
+        m.style.opacity = '0';
+        $('finalSavedImage').style.transform = 'scale(0.9)';
+        setTimeout(() => { m.style.display = 'none'; }, 300);
+    }
+
+    /* ================= Particles ================= */
+    const canvas = $('particles-canvas');
+    const ctx = canvas.getContext('2d');
+    const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const particles = [];
+    function sizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+    sizeCanvas();
+    window.addEventListener('resize', sizeCanvas);
+    for (let i = 0; i < 20; i++) {
+        particles.push({
+            x: Math.random() * canvas.width, y: Math.random() * canvas.height,
+            r: Math.random() * 2 + 0.3, vx: (Math.random() - 0.5) * 0.4, vy: (Math.random() - 0.5) * 0.4, a: Math.random() * 0.6 + 0.2
+        });
+    }
+    function animateParticles() {
+        if (!document.hidden) {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (const p of particles) {
+                p.x += p.vx; p.y += p.vy;
+                if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+                if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+                ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(212, 175, 55, ${p.a})`; ctx.fill();
+            }
+        }
+        requestAnimationFrame(animateParticles);
+    }
+    if (!reduceMotion) animateParticles();
+
+    /* ================= Input wiring ================= */
+    const balanceInput = $('balanceInput');
+    [balanceInput, $('expAmount')].forEach(el => el.addEventListener('keydown', e => {
+        if (['e', 'E', '+', '-'].includes(e.key)) e.preventDefault();
+    }));
+    let debounceTimer;
+    balanceInput.addEventListener('input', () => {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(setBalanceFromInput, 400);
+    });
+    balanceInput.addEventListener('blur', () => { clearTimeout(debounceTimer); setBalanceFromInput(); render(false); });
+    balanceInput.addEventListener('keydown', e => { if (e.key === 'Enter') balanceInput.blur(); });
+    $('expAmount').addEventListener('keydown', e => { if (e.key === 'Enter') submitExpense(); });
+    $('expNote').addEventListener('keydown', e => { if (e.key === 'Enter') submitExpense(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeModal(); closeSettings(); } });
+
+    // لما ترجع للتطبيق بعد ما كان بالخلفية: نحدّث كل شي
+    document.addEventListener('visibilitychange', () => {
+        if (!document.hidden) { updateGreeting(); updateCountdown(); render(false); }
+    });
+
+    /* ================= Init ================= */
+    renderChips();
+    updateGreeting();
+    updateCountdown();
+    render(true);
+    setInterval(updateCountdown, 1000);
+    setInterval(updateGreeting, 60000);
+
+    window.addEventListener('load', () => {
+        setTimeout(() => {
+            const splash = $('splashScreen');
+            splash.style.opacity = '0';
+            setTimeout(() => { splash.style.display = 'none'; }, 500);
+        }, 900);
+    });
+    // احتياط: إذا تأخر تحميل الملفات الخارجية ما نعلق على شاشة البداية
+    setTimeout(() => { const s = $('splashScreen'); if (s.style.display !== 'none') { s.style.opacity = '0'; setTimeout(() => s.style.display = 'none', 500); } }, 4000);
 </script>
 
 </body>
